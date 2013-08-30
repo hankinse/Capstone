@@ -1,0 +1,18 @@
+<resources>
+
+    <string name="app_name">Xue</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">Study Tool</string>
+    <string name="ecButtonLabel">English - Chinese</string>
+    <string name="ceButtonLabel">Chinese - English</string>
+    <string name="exitButtonLabel">Exit</string>
+    <string name="show">show</string>
+    <string name="okay">okay</string>
+    <string name="title_CEActivity">Chinese-English Trainer</string>
+    <string name="quit">Confirm quit</string>
+    <string name="reallyQuit">Quit and lose all progress on current deck?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+
+</resources>
