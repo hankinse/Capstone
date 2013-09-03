@@ -1,0 +1,11 @@
+/bin
+
+/gen
+/libs
+.classpath
+.project
+.settings/
+AndroidManifest.xml
+lint.xml
+proguard-project.txt
+project.properties
