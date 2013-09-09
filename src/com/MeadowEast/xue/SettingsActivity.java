@@ -11,8 +11,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	   	Intent i;
 	   	switch (arg0.getId()){
 	   	case R.id.update_button:
-    		i = new Intent(this, LearnActivity.class);
-	    	startActivity(i);
+	   		
 			break;
 	    	}
 	    }
