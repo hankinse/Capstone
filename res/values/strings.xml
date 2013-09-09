@@ -14,5 +14,6 @@
     <string name="reallyQuit">Quit and lose all progress on current deck?</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="settingsUpdate">Update</string>
 
 </resources>
