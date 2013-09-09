@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button ecButton, ceButton, exitButton;
+	Button ecButton, ceButton, exitButton, settingsButton;
 	public static File filesDir;
 	public static boolean vocabFileExists;
 	public static String vocabURL = "http://www.meadoweast.com/capstone/vocabUTF8.txt";
@@ -37,9 +37,11 @@ public class MainActivity extends Activity implements OnClickListener {
 		ecButton = (Button) findViewById(R.id.ecButton);
 		ceButton = (Button) findViewById(R.id.ceButton);
 		exitButton = (Button) findViewById(R.id.exitButton);
+		settingsButton = (Button) findViewById(R.id.settings_button);
 		ecButton.setOnClickListener(this);
 		ceButton.setOnClickListener(this);
 		exitButton.setOnClickListener(this);
+		settingsButton.setOnClickListener(this);
 		File sdCard = Environment.getExternalStorageDirectory();
 		filesDir = new File(sdCard.getAbsolutePath() + "/Android/data/com.MeadowEast.xue/files");
 		Log.d(TAG, "xxx filesDir=" + filesDir);
@@ -68,11 +70,16 @@ public class MainActivity extends Activity implements OnClickListener {
 			i = new Intent(this, LearnActivity.class);
 			startActivity(i);
 			break;
-		case R.id.exitButton:
-			finish();
+    	case R.id.settings_button:
+    		i = new Intent(this, SettingsActivity.class);    		
+    		startActivity(i);
+			break;
+    	case R.id.exitButton:
+    		finish();
 			break;
 		}
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

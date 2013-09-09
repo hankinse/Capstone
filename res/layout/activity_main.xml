@@ -3,35 +3,49 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/main_bg"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="30dp" >
-
+
+    <Button
+        android:id="@+id/settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="@string/button_settings_text"
+        android:textSize="20sp" />
+
     <Button
         android:id="@+id/ecButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginBottom="10dp"
+        android:alpha=".80"
+        android:background="#FFFFFF"
         android:padding="20dp"
         android:text="@string/ecButtonLabel"
-        android:textSize="40sp" />
-
+        android:textSize="35sp" />
+
     <Button
         android:id="@+id/ceButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:alpha=".80"
+        android:background="#FFFFFF"
         android:padding="20dp"
         android:text="@string/ceButtonLabel"
-        android:textSize="40sp" />
-
+        android:textSize="35sp" />
+
     <Button
         android:id="@+id/exitButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:alpha=".80"
+        android:background="#FFFFFF"
         android:padding="20dp"
         android:text="@string/exitButtonLabel"
-        android:textSize="40sp" />
+        android:textSize="35sp" />
 
 </LinearLayout>
