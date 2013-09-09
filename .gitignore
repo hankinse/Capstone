@@ -9,3 +9,5 @@ AndroidManifest.xml
 lint.xml
 proguard-project.txt
 project.properties
+.DS_Store
+
