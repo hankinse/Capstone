@@ -19,7 +19,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.settings_menu);
         updateButton   = (Button) findViewById(R.id.update_button);
     	updateButton.setOnClickListener(this);
         File sdCard = Environment.getExternalStorageDirectory();
