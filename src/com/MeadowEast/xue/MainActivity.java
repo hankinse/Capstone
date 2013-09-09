@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -44,10 +45,11 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "xxx filesDir=" + filesDir);
 
 		Log.d(TAG, "Checking for vocab file.");
-		checkVocabFileExists();
+
 
 		new Thread() {
 			public void run() {
+				checkVocabFileExists();
 				downloadVocab();
 			}
 		}.start();
@@ -78,9 +80,19 @@ public class MainActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
+	public void displayMessage(final String msg) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+			}
+
+		});
+	}
+
 	public void checkVocabFileExists() {
 		File vocabFile = new File(filesDir + "/vocabUTF8.txt");
 
+		Log.d(TAG, "Checking if vocabulary file exists.");
 		//Check whether the vocab file exists at given directory.
 		if (!vocabFile.exists()) {
 			Log.d(TAG, "Vocabulary file does not exist.");
@@ -99,6 +111,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		// Compare the filesize of the existing file with the filesize of the remote file.  If the sizes differ, download the remote file.
 		if (vocabFileExists) {
 			try {
+				displayMessage("Checking For Updates");
 				// Determine size of the local file.
 				int vocabFileSize = (int) vocabFile.length();
 				Log.d(TAG, "Existing vocab file size " + vocabFileSize + " bytes");
@@ -111,31 +124,38 @@ public class MainActivity extends Activity implements OnClickListener {
 
 				// Compare filesizes.  Set flag so that we 'pretend' the vocab file does not exist, so that a new one is downloaded.
 				if (vocabFileSize != remoteFileSize) {
+					displayMessage("Update Found");
 					vocabFileExists = false;
 					Log.d(TAG, "Existing vocab and remote file have a size mismatch.");
 				}
 
 				// Delete later. Debug message purposes only.
 				else {
+					displayMessage("No Updates Found");
 					Log.d(TAG, "Existing vocab and remote file have the same size. No need to update.");
 				}
 			}
 
 			catch (MalformedURLException e) {
 				e.printStackTrace();
+				displayMessage("Malformed URL Exception");
 			} catch (ProtocolException e) {
 				e.printStackTrace();
+				displayMessage("Protocol Exception");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+				displayMessage("File Not Found Exception");
 			} catch (IOException e) {
 				e.printStackTrace();
+				displayMessage("IO Exception");
 			}
 
 		}
-		
+
 		// Either no vocab file existed in the first place, or there is a size mismatch so a new one is downloaded.
 		if (!vocabFileExists) {
 			try {
+				displayMessage("Downloading Update");
 				// URL of remote vocabulary file
 				URL url = new URL(vocabURL);
 
@@ -173,16 +193,21 @@ public class MainActivity extends Activity implements OnClickListener {
 				fos.close();
 				is.close();
 				Log.d(TAG, "Vocab file download closed.");
+				displayMessage("Update Complete");
 			}
 
 			catch (MalformedURLException e) {
 				e.printStackTrace();
+				displayMessage("Malformed URL Exception");
 			} catch (ProtocolException e) {
 				e.printStackTrace();
+				displayMessage("Protocol Exception");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+				displayMessage("File Not Found Exception");
 			} catch (IOException e) {
 				e.printStackTrace();
+				displayMessage("IO Exception");
 			}
 		}
 	}
