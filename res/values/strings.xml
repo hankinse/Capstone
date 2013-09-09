@@ -15,5 +15,6 @@
     <string name="yes">yes</string>
     <string name="no">no</string>
     <string name="settingsUpdate">Update</string>
+    <string name="button_settings_text">Settings</string>
 
 </resources>
