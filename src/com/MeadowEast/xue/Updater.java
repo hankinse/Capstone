@@ -16,7 +16,6 @@ public class Updater {
 
 	public static boolean vocabFileExists;
 	public static String vocabURL = "http://www.meadoweast.com/capstone/vocabUTF8.txt";
-	public MainActivity mainAct;
 	static final String TAG = "XUE Updater";
 	
 
@@ -50,8 +49,10 @@ public class Updater {
 
 				// Open an http connection and determine size of the remote file.
 				URL url = new URL(vocabURL);
-				HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
-				int remoteFileSize = httpConnection.getContentLength();
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				String header = connection.getHeaderField(7);
+				Log.d(TAG, "HEADER: " + header);
+				int remoteFileSize = connection.getContentLength();
 				Log.d(TAG, "Remote vocab file size " + remoteFileSize + " bytes");
 
 				// Compare filesizes.  Set flag so that we 'pretend' the vocab file does not exist, so that a new one is downloaded.
