@@ -1,7 +1,6 @@
 package com.MeadowEast.xue;
 
 import java.io.File;
-
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -47,6 +46,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				Updater updater = new Updater();
 				updater.checkVocabFileExists(filesDir);
 				updater.downloadVocab(filesDir);
+				
 			}
 		}.start(); 
 	}

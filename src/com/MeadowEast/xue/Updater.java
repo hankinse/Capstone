@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-
 import android.util.Log;
 
 public class Updater {
@@ -50,7 +49,7 @@ public class Updater {
 				// Open an http connection and determine size of the remote file.
 				URL url = new URL(vocabURL);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				String header = connection.getHeaderField(7);
+				String header = connection.getHeaderField("Date");
 				Log.d(TAG, "HEADER: " + header);
 				int remoteFileSize = connection.getContentLength();
 				Log.d(TAG, "Remote vocab file size " + remoteFileSize + " bytes");
@@ -82,7 +81,6 @@ public class Updater {
 				e.printStackTrace();
 				Log.d(TAG, "IO Exception");
 			}
-
 		}
 
 		// Either no vocab file existed in the first place, or there is a size mismatch so a new one is downloaded.
