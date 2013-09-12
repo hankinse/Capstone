@@ -23,6 +23,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	static final String TAG = "XUE MainActivity";
 	public static boolean vocabFileExists;
 	public static String vocabURL = "http://www.meadoweast.com/capstone/vocabUTF8.txt";
+	public static SharedPreferences settings;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,22 +42,30 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "xxx filesDir=" + filesDir);
 
 		Log.d(TAG, "Checking for vocab file.");
-		final SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		
 
 		new Thread() {
 			public void run() {
 				Updater updater = new Updater();
 				String current = updater.getCurrentVersion();
+				Log.d(TAG, "Current file version: " + current);
 				if (current.equals("ERROR")) {				// Make sure we got the header correctly.
 					Log.d(TAG, "Could not update vocab file.");
 					return;
 				}
-				if (isCorrectVersion(current, settings))	// If we're up to date, exit.
-					return;
-				// If not, download and replace the new file.
-				updater.downloadVocab(filesDir);
-				writeFileVersion(current, settings);
+				else {
+					if (isCorrectVersion(current, settings)) {	// If we're up to date, exit.
+						Log.d(TAG, "Local vocab file is current.");
+						return;
+					}
+					else {
+						// If not, download and replace the new file.
+						Log.d(TAG, "Need to update vocab file.");
+						updater.downloadVocab(filesDir);
+						writeFileVersion(current, settings);
+					}
+				}
 			}
 		}.start(); 
 	}
@@ -96,7 +105,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			public void run() {
 				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
 			}
-
 		});
 	}	
 	
@@ -107,13 +115,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 	
 	private boolean isCorrectVersion(String version, SharedPreferences settings) {
-		if (settings.contains(getString(R.string.file_version_id))) {
-			String local = settings.getString(getString(R.string.file_version_id), version);
-			if (local.equals(version)) {
-				return true;
-			}
-		}
-		
-		return false;
+		String local = settings.getString(getString(R.string.file_version_id), "");
+		Log.d(TAG, "Local version:" + local);
+		if (local.equals(version)) {
+			return true;
+		}		
+		else
+			return false;
 	}
 }
