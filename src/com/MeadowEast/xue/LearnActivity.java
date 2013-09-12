@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,12 +27,15 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	int itemsShown;
 	TextView prompt, answer, other, status;
 	Button advance, okay;
+	static Context context;
+	
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn);
         Log.d(TAG, "Entering onCreate");
+        context = this.getApplicationContext();
 
         itemsShown = 0;
         prompt  = (TextView) findViewById(R.id.promptTextView);
