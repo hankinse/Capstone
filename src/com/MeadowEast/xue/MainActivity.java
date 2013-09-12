@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 public class MainActivity extends Activity implements OnClickListener {
 
 	Button ecButton, ceButton, exitButton, settingsButton;
+	public static String packageName;
 	public static File filesDir;
 	public static String mode;
 	static final String TAG = "XUE MainActivity";
@@ -29,6 +30,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		packageName = getApplicationContext().getPackageName();
 		ecButton = (Button) findViewById(R.id.ecButton);
 		ceButton = (Button) findViewById(R.id.ceButton);
 		exitButton = (Button) findViewById(R.id.exitButton);
