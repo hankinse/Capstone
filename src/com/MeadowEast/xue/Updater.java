@@ -33,6 +33,29 @@ public class Updater {
 
 	}
 
+	/// Returns the 'date' field of the file header from the website or "ERROR"
+	public String getCurrentVersion() {
+		String header = "ERROR";	
+		try {
+			// Open an http connection and get the "date" field of the header.
+			URL url = new URL(vocabURL);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			header = connection.getHeaderField("Date");
+			Log.d(TAG, "Header date found: " + header);
+		}
+
+		catch (MalformedURLException e) {
+			Log.d(TAG, "Malformed URL Exception");
+		} catch (ProtocolException e) {
+			Log.d(TAG, "Protocol Exception");
+		} catch (FileNotFoundException e) {
+			Log.d(TAG, "File Not Found Exception");
+		} catch (IOException e) {
+			Log.d(TAG, "IO Exception");
+		}
+		
+		return header;
+	}
 
 	public void downloadVocab(File filesDir) {
 		File vocabFile = new File(filesDir + "/vocabUTF8.txt");

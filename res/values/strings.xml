@@ -16,5 +16,7 @@
     <string name="no">no</string>
     <string name="settingsUpdate">Update</string>
     <string name="button_settings_text">Settings</string>
+    <string name="shared_settings_key">SHARED_SETTINGS_KEY</string>
+    <string name="file_version_id">file_version</string>
 
 </resources>

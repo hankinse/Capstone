@@ -4,6 +4,7 @@ import java.io.File;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import com.MeadowEast.xue.Updater;
+import android.content.SharedPreferences;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -39,14 +41,22 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "xxx filesDir=" + filesDir);
 
 		Log.d(TAG, "Checking for vocab file.");
-
+		final SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		
 
 		new Thread() {
 			public void run() {
 				Updater updater = new Updater();
-				updater.checkVocabFileExists(filesDir);
+				String current = updater.getCurrentVersion();
+				if (current.equals("ERROR")) {				// Make sure we got the header correctly.
+					Log.d(TAG, "Could not update vocab file.");
+					return;
+				}
+				if (isCorrectVersion(current, settings))	// If we're up to date, exit.
+					return;
+				// If not, download and replace the new file.
 				updater.downloadVocab(filesDir);
-				
+				writeFileVersion(current, settings);
 			}
 		}.start(); 
 	}
@@ -89,4 +99,21 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		});
 	}	
+	
+	private void writeFileVersion(String version, SharedPreferences settings) {
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(getString(R.string.file_version_id), version);
+		editor.commit();
+	}
+	
+	private boolean isCorrectVersion(String version, SharedPreferences settings) {
+		if (settings.contains(getString(R.string.file_version_id))) {
+			String local = settings.getString(getString(R.string.file_version_id), version);
+			if (local.equals(version)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
