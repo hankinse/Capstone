@@ -145,13 +145,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		Calendar toUpdate = Calendar.getInstance();
 		toUpdate.set(updateYear,  updateMonth, updateDay);
 		
-		Log.d(TAG, "Time now: " + now);
-		Log.d(TAG, "Time for update: " + toUpdate);
-		
 		// If the current time is after the next update time, we want to update.
-		boolean needsUpdate = now.after(toUpdate);
-		Log.d(TAG, "needs an update? " + needsUpdate);
-		return needsUpdate;
+		return now.after(toUpdate);
 	}
 	
 	private void setNextUpdateTime(SharedPreferences settings) {
