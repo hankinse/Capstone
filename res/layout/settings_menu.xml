@@ -27,7 +27,7 @@
         android:textSize="26sp" />
 
     <ToggleButton
-        android:id="@+id/toggleButton1"
+        android:id="@+id/audio_on_off_button"
         android:layout_width="100dp"
         android:layout_column="1"
         android:layout_gravity="center"

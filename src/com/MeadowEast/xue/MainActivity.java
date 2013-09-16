@@ -32,6 +32,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		packageName = getApplicationContext().getPackageName();
 		ecButton = (Button) findViewById(R.id.ecButton);
 		ceButton = (Button) findViewById(R.id.ceButton);
@@ -46,7 +47,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "xxx filesDir=" + filesDir);
 
 		Log.d(TAG, "Checking for vocab file.");
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		
 		// DEBUG: Set update date to yesterday to force an update.  Comment forceUpdateDate() out to do real checking.
 		// call forceUpdateDate() to forcibly trigger the time to update.

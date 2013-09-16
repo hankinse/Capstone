@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,6 +24,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	static final int ECDECKSIZE = 40;
 	static final int CEDECKSIZE = 60;
 	
+	SharedPreferences settings;
 	LearningProject lp;
 	int itemsShown;
 	TextView prompt, answer, other, status;
@@ -36,6 +38,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
         setContentView(R.layout.activity_learn);
         Log.d(TAG, "Entering onCreate");
         context = this.getApplicationContext();
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 
         itemsShown = 0;
         prompt  = (TextView) findViewById(R.id.promptTextView);
@@ -86,7 +89,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		} else if (itemsShown == 3){
 			// Got it wrong
 			advance.setText("show");
-			lp.wrong();
+			lp.wrong(SettingsActivity.audioOn(settings));
 			lp.next();
 			clearContent();
 			prompt.setText(lp.prompt());
@@ -116,7 +119,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		// Do nothing unless answer has been seen
 		if (itemsShown < 2) return;
 		// Got it right
-		lp.right();
+		lp.right(SettingsActivity.audioOn(settings));
 		if (lp.next()){
 			advance.setText("show");
 			clearContent();
