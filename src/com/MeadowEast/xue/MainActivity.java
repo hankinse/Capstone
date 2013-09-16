@@ -2,7 +2,6 @@ package com.MeadowEast.xue;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -63,7 +62,7 @@ public class MainActivity extends Activity implements OnClickListener {
 						Log.d(TAG, "Could not update vocab file.");
 					}
 					else {
-						if (isCorrectVersion(current, settings)) {	// If we're up to date, exit.
+						if (isCorrectVersion(current, settings)) {	// If we're up to date, do nothing.
 							Log.d(TAG, "Local vocab file is current.");
 						}
 						else {
@@ -164,6 +163,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		editor.commit();
 	}
 	
+	@SuppressWarnings("unused")
 	private void forceUpdateDate(SharedPreferences settings) {
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.DAY_OF_MONTH, -1);	// We want to check again in one week.
