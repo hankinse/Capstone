@@ -1,6 +1,9 @@
 package com.MeadowEast.xue;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -46,30 +49,34 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "Checking for vocab file.");
 		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		
-
-		new Thread() {
-			public void run() {
-				Updater updater = new Updater();
-				String current = updater.getCurrentVersion();
-				Log.d(TAG, "Current file version: " + current);
-				if (current.equals("ERROR")) {				// Make sure we got the header correctly.
-					Log.d(TAG, "Could not update vocab file.");
-					return;
-				}
-				else {
-					if (isCorrectVersion(current, settings)) {	// If we're up to date, exit.
-						Log.d(TAG, "Local vocab file is current.");
-						return;
+		// DEBUG: Set update date to yesterday to force an update.  Comment forceUpdateDate() out to do real checking.
+		// call forceUpdateDate() to forcibly trigger the time to update.
+		// forceUpdateDate(settings);
+		
+		if (timeToUpdate(settings)) {
+			new Thread() {
+				public void run() {
+					Updater updater = new Updater();
+					String current = updater.getCurrentVersion();
+					Log.d(TAG, "Current file version: " + current);
+					if (current.equals("ERROR")) {				// Make sure we got the header correctly.
+						Log.d(TAG, "Could not update vocab file.");
 					}
 					else {
-						// If not, download and replace the new file.
-						Log.d(TAG, "Need to update vocab file.");
-						updater.downloadVocab(filesDir);
-						writeFileVersion(current, settings);
+						if (isCorrectVersion(current, settings)) {	// If we're up to date, exit.
+							Log.d(TAG, "Local vocab file is current.");
+						}
+						else {
+							// If not, download and replace the new file.
+							Log.d(TAG, "Need to update vocab file.");
+							updater.downloadVocab(filesDir);
+							writeFileVersion(current, settings);
+						}
 					}
+					setNextUpdateTime(settings);
 				}
-			}
-		}.start(); 
+			}.start(); 
+		}
 	}
 
 	public void onClick(View v) {
@@ -124,5 +131,45 @@ public class MainActivity extends Activity implements OnClickListener {
 		}		
 		else
 			return false;
+	}
+	
+	private boolean timeToUpdate(SharedPreferences settings) {
+		Calendar now = Calendar.getInstance();
+		
+		// Get the next update time.  If there hasn't been an update yet, say
+		// the next update was a year ago so we definitely want to update.
+		int updateYear = settings.getInt("next_update_year", 2012);
+		int updateMonth = settings.getInt("next_update_month", 1);
+		int updateDay = settings.getInt("next_update_day", 1);
+		Log.d(TAG, "updateYear: " + updateYear + " updateMonth: " + updateMonth + " updateDay: " + updateDay);
+		Calendar toUpdate = Calendar.getInstance();
+		toUpdate.set(updateYear,  updateMonth, updateDay);
+		
+		// If the current time is after the next update time, we want to update.
+		return now.after(toUpdate);
+	}
+	
+	private void setNextUpdateTime(SharedPreferences settings) {
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.DAY_OF_MONTH, 7);	// We want to check again in one week.
+		int year = now.get(Calendar.YEAR);
+		int month = now.get(Calendar.MONTH);
+		int day = now.get(Calendar.DAY_OF_MONTH);
+		Log.d(TAG, "Next update on: " + year + " , " + month + " , " + day + ".");
+		
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt("next_update_year", year);
+		editor.putInt("next_update_month", month);
+		editor.putInt("next_update_day", day);
+		editor.commit();
+	}
+	
+	private void forceUpdateDate(SharedPreferences settings) {
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.DAY_OF_MONTH, -1);	// We want to check again in one week.
+		int day = now.get(Calendar.DAY_OF_MONTH);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt("next_update_day", day);
+		editor.commit();
 	}
 }
