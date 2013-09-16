@@ -77,9 +77,13 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 				throw new IllegalStateException("Error: Deck starts empty.");
 			}
 		} else if (itemsShown == 1){
+			Log.d(TAG, lp.other());
+			TextToSpeech.englishToSpeech(lp.prompt());
 			answer.setText(lp.answer());
 			itemsShown++;
 		} else if (itemsShown == 2){
+			Log.d(TAG, lp.other());
+			TextToSpeech.hanziToSpeech(lp.other());
 			other.setText(lp.other());
 			advance.setText("next");
 			itemsShown++;

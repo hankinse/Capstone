@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp" >
-
+
     <TextView
         android:id="@+id/promptTextView"
         android:layout_width="fill_parent"
@@ -16,7 +16,7 @@
         android:text="@string/hello_world"
         android:textSize="40sp"
         tools:context=".MainActivity" />
-
+
     <TextView
         android:id="@+id/answerTextView"
         android:layout_width="fill_parent"
@@ -25,7 +25,7 @@
         android:ems="10"
         android:gravity="center"
         android:textSize="40sp" />
-
+
     <TextView
         android:id="@+id/otherTextView"
         android:layout_width="fill_parent"
@@ -35,11 +35,16 @@
         android:gravity="top|center"
         android:textSize="40sp" />
 
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+         />
+
     <LinearLayout
         android:id="@+id/controlLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
-
 
         <Button
             android:id="@+id/advanceButton"
@@ -52,14 +57,9 @@
             android:id="@+id/okayButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/okay" 
+            android:text="@string/okay"
             android:textSize="40sp" />
-
     </LinearLayout>
-
-
-
-
 
     <TextView
         android:id="@+id/statusTextView"
