@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -160,6 +161,21 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
     		break;
     	}
     	return true;
+    }
+    
+    private void setTime(long value) {
+    	SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+    	SharedPreferences.Editor editor = settings.edit();
+    	
+    	editor.putLong("deck_timer_value", value);
+    	editor.commit();
+    }
+    
+    private long getTime() {
+    	SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+    	long time = settings.getLong("deck_timer_value", 0);
+    	
+    	return time;
     }
     
     @Override
