@@ -28,6 +28,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	public static boolean vocabFileExists;
 	public static String vocabURL = "http://www.meadoweast.com/capstone/vocabUTF8.txt";
 	public static SharedPreferences settings;
+	final static int UPDATE_INTERVAL_DAYS = 7;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,36 +48,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "xxx filesDir=" + filesDir);
 
 		Log.d(TAG, "Checking for vocab file.");
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		
 		// DEBUG: Set update date to yesterday to force an update.  Comment forceUpdateDate() out to do real checking.
 		// call forceUpdateDate() to forcibly trigger the time to update.
 		// forceUpdateDate(settings);
 		
-		if (timeToUpdate(settings)) {
-			new Thread() {
-				public void run() {
-					Updater updater = new Updater();
-					String current = updater.getCurrentVersion();
-					Log.d(TAG, "Current file version: " + current);
-					if (current != null && current.equals("ERROR")) {				// Make sure we got the header correctly.
-						Log.d(TAG, "Could not update vocab file.");
-					}
-					else {
-						if (isCorrectVersion(current, settings)) {	// If we're up to date, exit.
-							Log.d(TAG, "Local vocab file is current.");
-						}
-						else {
-							// If not, download and replace the new file.
-							Log.d(TAG, "Need to update vocab file.");
-							updater.downloadVocab(filesDir);
-							writeFileVersion(current, settings);
-						}
-					}
-					setNextUpdateTime(settings);
-				}
-			}.start(); 
-		}
+		handleUpdate();
 	}
 
 	public void onClick(View v) {
@@ -102,6 +79,34 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private void handleUpdate() {
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		
+		if (timeToUpdate(settings)) {
+			new Thread() {
+				public void run() {
+					Updater updater = new Updater();
+					String current = updater.getCurrentVersion();
+					Log.d(TAG, "Current file version: " + current);
+					if (current == null || current.equals("ERROR")) {				// Make sure we got the header correctly.
+						Log.d(TAG, "Could not update vocab file.");
+					}
+					else {
+						if (isCorrectVersion(current, settings)) {	// If we're up to date, exit.
+							Log.d(TAG, "Local vocab file is current.");
+						}
+						else {
+							// If not, download and replace the new file.
+							Log.d(TAG, "Need to update vocab file.");
+							updater.downloadVocab(filesDir);
+							writeFileVersion(current, settings);
+						}
+					}
+					setNextUpdateTime(settings);
+				}
+			}.start(); 
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,7 +156,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	private void setNextUpdateTime(SharedPreferences settings) {
 		Calendar now = Calendar.getInstance();
-		now.add(Calendar.DAY_OF_MONTH, 7);	// We want to check again in one week.
+		now.add(Calendar.DAY_OF_MONTH, UPDATE_INTERVAL_DAYS);		// We want to check again in one week.
 		int year = now.get(Calendar.YEAR);
 		int month = now.get(Calendar.MONTH);
 		int day = now.get(Calendar.DAY_OF_MONTH);
