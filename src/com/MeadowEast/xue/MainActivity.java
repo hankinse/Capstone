@@ -59,7 +59,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					Updater updater = new Updater();
 					String current = updater.getCurrentVersion();
 					Log.d(TAG, "Current file version: " + current);
-					if (current.equals("ERROR")) {				// Make sure we got the header correctly.
+					if (current != null && current.equals("ERROR")) {				// Make sure we got the header correctly.
 						Log.d(TAG, "Could not update vocab file.");
 					}
 					else {
