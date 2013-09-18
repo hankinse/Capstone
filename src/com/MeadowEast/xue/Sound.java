@@ -1,12 +1,9 @@
 package com.MeadowEast.xue;
 
-import java.io.File;
-
 import java.io.IOException;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Environment;
 
 public class Sound {
 	public static MediaPlayer right = MediaPlayer.create(LearnActivity.context, R.raw.right);
