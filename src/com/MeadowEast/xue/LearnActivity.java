@@ -27,7 +27,6 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	static final int ECDECKSIZE = 40;
 	static final int CEDECKSIZE = 60;
 
-	long lastTimeStamp;
 	static Handler timerHandler;
 	static int seconds;
 
@@ -52,6 +51,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
         answer  = (TextView) findViewById(R.id.answerTextView);
         advance  = (Button) findViewById(R.id.advanceButton);
         okay     = (Button) findViewById(R.id.okayButton);
+        timer	= (TextView) findViewById(R.id.timerTextView);
     	   
     	findViewById(R.id.advanceButton).setOnClickListener(this);
     	findViewById(R.id.okayButton).setOnClickListener(this);
@@ -70,7 +70,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
     	clearContent();
     	doAdvance();
 
-    	lastTimeStamp = System.currentTimeMillis();
+    	seconds = 0;
 		timerHandler = new Handler();
 	}
 
