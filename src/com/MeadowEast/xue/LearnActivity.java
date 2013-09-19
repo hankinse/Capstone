@@ -57,10 +57,13 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
     	findViewById(R.id.answerTextView).setOnLongClickListener(this);
     	findViewById(R.id.otherTextView).setOnLongClickListener(this);
     	
+    	int deckSize = getDeckSize();
     	if (MainActivity.mode.equals("ec"))
-    		lp = new EnglishChineseProject(ECDECKSIZE);	
+ //   		lp = new EnglishChineseProject(ECDECKSIZE);	
+    		lp = new EnglishChineseProject(deckSize);
     	else
-    		lp = new ChineseEnglishProject(CEDECKSIZE);
+ //   		lp = new ChineseEnglishProject(CEDECKSIZE);
+    		lp = new ChineseEnglishProject(deckSize);
     	clearContent();
     	doAdvance();
     }
@@ -197,5 +200,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
     public boolean audioOn() {
 		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
+    }
+    
+    public int getDeckSize() {
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_key), SettingsActivity.DEFAULT_DECK_SIZE);	
     }
 }

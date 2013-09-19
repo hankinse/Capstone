@@ -23,6 +23,10 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	public static SharedPreferences settings;
 	public static File filesDir;
 	static final String TAG = "XUE SettingsActivity";
+	public static final int DECK_MIN_SIZE = 5;
+	public static final int DECK_MAX_SIZE = 500;
+	public static final int DEFAULT_DECK_SIZE = 50;
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,10 @@ public class SettingsActivity extends Activity implements OnClickListener {
     	audioButton.setChecked(audioOn());
     	deckSizePicker = (NumberPicker) findViewById(R.id.deck_size_picker);
     	deckSizePicker.setOnClickListener(this);
+    	deckSizePicker.setMaxValue(DECK_MAX_SIZE);
+    	deckSizePicker.setMinValue(DECK_MIN_SIZE);
+    	deckSizePicker.setValue(getDeckSize());
+    	deckSizePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     	File sdCard = Environment.getExternalStorageDirectory();
 		filesDir = new File (sdCard.getAbsolutePath() + "/Android/data/com.MeadowEast.xue/files");
 		Log.d(TAG, "xxx filesDir="+filesDir);
@@ -51,15 +59,14 @@ public class SettingsActivity extends Activity implements OnClickListener {
     @Override
 	protected void onPause() {
     	super.onPause();
-    	
+    	Log.d(TAG, "onPause()");
+    	setDeckSize(deckSizePicker.getValue());
+    	setAudioOnOff(audioButton.isChecked());
     }
     
     @Override
     public void onStop() {
     	super.onStop();
-    	Log.d(TAG, "onStop()");
-    	setDeckSize(deckSizePicker.getValue());
-    	setAudioOnOff(audioButton.isChecked());
     }
     
 	public void onClick(View arg0) {
@@ -98,7 +105,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	
 	public int getDeckSize() {
 		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		int size = settings.getInt("deck_size", 50);
+		int size = settings.getInt(getString(R.string.deck_size_key), DEFAULT_DECK_SIZE);
 		Log.d(TAG, "Current deck size: " + size);
 		return size;
 	}
@@ -106,7 +113,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	public void setDeckSize(int size) {
 		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt("deck_size", size);
+		editor.putInt(getString(R.string.deck_size_key), size);
 		editor.commit();
+		Log.d(TAG, "Set deck size to: " + size);
 	}
 }
