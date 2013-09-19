@@ -45,30 +45,32 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		setContentView(R.layout.activity_learn);
 		Log.d(TAG, "Entering onCreate");
 		context = this.getApplicationContext();
+        itemsShown = 0;
+        prompt  = (TextView) findViewById(R.id.promptTextView);
+        status  = (TextView) findViewById(R.id.statusTextView);
+        other   = (TextView) findViewById(R.id.otherTextView);
+        answer  = (TextView) findViewById(R.id.answerTextView);
+        advance  = (Button) findViewById(R.id.advanceButton);
+        okay     = (Button) findViewById(R.id.okayButton);
+    	   
+    	findViewById(R.id.advanceButton).setOnClickListener(this);
+    	findViewById(R.id.okayButton).setOnClickListener(this);
+    	
+    	findViewById(R.id.promptTextView).setOnLongClickListener(this);
+    	findViewById(R.id.answerTextView).setOnLongClickListener(this);
+    	findViewById(R.id.otherTextView).setOnLongClickListener(this);
+    	
+    	int deckSize = getDeckSize();
+    	if (MainActivity.mode.equals("ec"))
+ //   		lp = new EnglishChineseProject(ECDECKSIZE);	
+    		lp = new EnglishChineseProject(deckSize);
+    	else
+ //   		lp = new ChineseEnglishProject(CEDECKSIZE);
+    		lp = new ChineseEnglishProject(deckSize);
+    	clearContent();
+    	doAdvance();
 
-		itemsShown = 0;
-		prompt = (TextView) findViewById(R.id.promptTextView);
-		status = (TextView) findViewById(R.id.statusTextView);
-		other = (TextView) findViewById(R.id.otherTextView);
-		answer = (TextView) findViewById(R.id.answerTextView);
-		timer = (TextView) findViewById(R.id.timerTextView);
-		advance = (Button) findViewById(R.id.advanceButton);
-		okay = (Button) findViewById(R.id.okayButton);
-
-		findViewById(R.id.advanceButton).setOnClickListener(this);
-		findViewById(R.id.okayButton).setOnClickListener(this);
-
-		findViewById(R.id.promptTextView).setOnLongClickListener(this);
-		findViewById(R.id.answerTextView).setOnLongClickListener(this);
-		findViewById(R.id.otherTextView).setOnLongClickListener(this);
-
-		if (MainActivity.mode.equals("ec")) lp = new EnglishChineseProject(ECDECKSIZE);
-		else
-			lp = new ChineseEnglishProject(CEDECKSIZE);
-		clearContent();
-		doAdvance();
-
-		lastTimeStamp = System.currentTimeMillis();
+    	lastTimeStamp = System.currentTimeMillis();
 		timerHandler = new Handler();
 	}
 
@@ -236,5 +238,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
     public boolean audioOn() {
 		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
+    }
+    
+    public int getDeckSize() {
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_key), SettingsActivity.DEFAULT_DECK_SIZE);	
     }
 }
