@@ -201,18 +201,18 @@ public class LearnActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		timerHandler.postDelayed(runnable, 1000);
+		timerHandler.postDelayed(timerMetronome, 1000);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		timerHandler.removeCallbacks(runnable);
+		timerHandler.removeCallbacks(timerMetronome);
 
 	}
 
 	// Rename
-	private final Runnable runnable = new Runnable() {
+	private final Runnable timerMetronome = new Runnable() {
 		public void run() {
 			seconds += 1;
 			int minutes = seconds / 60;
@@ -225,7 +225,7 @@ public class LearnActivity extends Activity implements OnClickListener,
 			else
 				timer.setText(String.format("%d:%02d", minutes, seconds % 60));
 
-			timerHandler.postDelayed(runnable, 1000);
+			timerHandler.postDelayed(timerMetronome, 1000);
 		}
 	};
 
