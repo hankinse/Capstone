@@ -22,6 +22,7 @@
         android:layout_weight=".3"
         android:gravity="bottom|center"
         android:text="@string/hello_world"
+        android:textIsSelectable="true"
         android:textSize="40sp"
         tools:context=".MainActivity" />
 
@@ -32,6 +33,7 @@
         android:layout_weight=".3"
         android:ems="10"
         android:gravity="center"
+        android:textIsSelectable="true"
         android:textSize="40sp" />
 
     <TextView
@@ -41,6 +43,7 @@
         android:layout_weight=".3"
         android:ems="3"
         android:gravity="top|center"
+        android:textIsSelectable="true"
         android:textSize="40sp" />
 
     <TextView
