@@ -46,29 +46,33 @@ public class LearnActivity extends Activity implements OnClickListener,
 		Log.d(TAG, "Entering onCreate");
 		context = this.getApplicationContext();
 
-		itemsShown = 0;
-		prompt = (TextView) findViewById(R.id.promptTextView);
-		status = (TextView) findViewById(R.id.statusTextView);
-		other = (TextView) findViewById(R.id.otherTextView);
-		answer = (TextView) findViewById(R.id.answerTextView);
-		timer = (TextView) findViewById(R.id.timerTextView);
-		advance = (Button) findViewById(R.id.advanceButton);
-		okay = (Button) findViewById(R.id.okayButton);
-
-		findViewById(R.id.advanceButton).setOnClickListener(this);
-		findViewById(R.id.okayButton).setOnClickListener(this);
-		
-		findViewById(R.id.promptTextView).setOnLongClickListener(this);
+        itemsShown = 0;
+        prompt  = (TextView) findViewById(R.id.promptTextView);
+        status  = (TextView) findViewById(R.id.statusTextView);
+        other   = (TextView) findViewById(R.id.otherTextView);
+        answer  = (TextView) findViewById(R.id.answerTextView);
+        advance  = (Button) findViewById(R.id.advanceButton);
+        okay     = (Button) findViewById(R.id.okayButton);
+        timer	= (TextView) findViewById(R.id.timerTextView);
+    	   
+    	findViewById(R.id.advanceButton).setOnClickListener(this);
+    	findViewById(R.id.okayButton).setOnClickListener(this);
+    	
+    	findViewById(R.id.promptTextView).setOnLongClickListener(this);
     	findViewById(R.id.answerTextView).setOnLongClickListener(this);
     	findViewById(R.id.otherTextView).setOnLongClickListener(this);
+    	
+    	int deckSize = getDeckSize();
+    	if (MainActivity.mode.equals("ec"))
+ //   		lp = new EnglishChineseProject(ECDECKSIZE);	
+    		lp = new EnglishChineseProject(deckSize);
+    	else
+ //   		lp = new ChineseEnglishProject(CEDECKSIZE);
+    		lp = new ChineseEnglishProject(deckSize);
+    	clearContent();
+    	doAdvance();
 
-		if (MainActivity.mode.equals("ec"))
-			lp = new EnglishChineseProject(ECDECKSIZE);
-		else
-			lp = new ChineseEnglishProject(CEDECKSIZE);
-		clearContent();
-		doAdvance();
-
+    	seconds = 0;
 		timerHandler = new Handler();
 
 	}
@@ -224,34 +228,6 @@ public class LearnActivity extends Activity implements OnClickListener,
 		}
 	};
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Log.d(TAG, "llkj");
-			new AlertDialog.Builder(this)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(R.string.quit)
-					.setMessage(R.string.reallyQuit)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									LearnActivity.this.finish();
-								}
-							}).setNegativeButton(R.string.no, null).show();
-			return true;
-		} else {
-			return super.onKeyDown(keyCode, event);
-		}
-	}
-
-	public boolean audioOn() {
-		settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings
-				.getBoolean(getString(R.string.audio_state_on_off), true);
-	}
-
 	public void mdbg(TextView text) {
 		String str = text.getText().toString();
 		int start = text.getSelectionStart();
@@ -266,4 +242,34 @@ public class LearnActivity extends Activity implements OnClickListener,
 
 	}
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            Log.d(TAG, "llkj");
+            new AlertDialog.Builder(this)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(R.string.quit)
+            .setMessage(R.string.reallyQuit)
+            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    LearnActivity.this.finish();    
+                }
+            })
+            .setNegativeButton(R.string.no, null)
+            .show();
+            return true;
+        } else {
+        	return super.onKeyDown(keyCode, event);
+        }
+    }
+    
+    public boolean audioOn() {
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
+    }
+    
+    public int getDeckSize() {
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_key), SettingsActivity.DEFAULT_DECK_SIZE);	
+    }
 }
