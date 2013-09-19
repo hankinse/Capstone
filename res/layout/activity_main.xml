@@ -9,9 +9,6 @@
 		android:scaleType="centerInside">
 	</ImageView>
 
-	<Button android:id="@+id/settings_button" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_gravity="right"
-		android:text="@string/button_settings_text" android:textSize="20sp" />
 
 	<Button android:id="@+id/ecButton" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_marginBottom="10dp"

@@ -2,7 +2,6 @@ package com.MeadowEast.xue;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,7 +20,7 @@ import android.content.SharedPreferences;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button ecButton, ceButton, exitButton, settingsButton;
+	Button ecButton, ceButton, exitButton;
 	public static String packageName;
 	public static File filesDir;
 	public static String mode;
@@ -34,15 +34,15 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		packageName = getApplicationContext().getPackageName();
+		// button setup
 		ecButton = (Button) findViewById(R.id.ecButton);
 		ceButton = (Button) findViewById(R.id.ceButton);
 		exitButton = (Button) findViewById(R.id.exitButton);
-		settingsButton = (Button) findViewById(R.id.settings_button);
 		ecButton.setOnClickListener(this);
 		ceButton.setOnClickListener(this);
 		exitButton.setOnClickListener(this);
-		settingsButton.setOnClickListener(this);
 		File sdCard = Environment.getExternalStorageDirectory();
 		filesDir = new File(sdCard.getAbsolutePath() + "/Android/data/com.MeadowEast.xue/files");
 		Log.d(TAG, "xxx filesDir=" + filesDir);
@@ -68,10 +68,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			mode = "ce";
 			i = new Intent(this, LearnActivity.class);
 			startActivity(i);
-			break;
-    	case R.id.settings_button:
-    		i = new Intent(this, SettingsActivity.class);    		
-    		startActivity(i);
 			break;
     	case R.id.exitButton:
     		finish();
@@ -113,6 +109,16 @@ public class MainActivity extends Activity implements OnClickListener {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_settings:
+    		Intent i = new Intent(this, SettingsActivity.class);    		
+    		startActivity(i);
+			break;
+        }
+        return true;
+    }
 
 	public void displayMessage(final String msg) {
 		runOnUiThread(new Runnable() {
@@ -169,6 +175,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		editor.commit();
 	}
 	
+	@SuppressWarnings("unused")
 	private void forceUpdateDate(SharedPreferences settings) {
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.DAY_OF_MONTH, -1);	// We want to check again in one week.

@@ -18,5 +18,8 @@
     <string name="button_settings_text">Settings</string>
     <string name="shared_settings_key">SHARED_SETTINGS_KEY</string>
     <string name="file_version_id">file_version</string>
+    <string name="audio_setting_text">Auido feedback:</string>
+    <string name="deck_size_text">Deck Size:</string>
+    <string name="audio_state_on_off">audio_on_off</string>
 
 </resources>

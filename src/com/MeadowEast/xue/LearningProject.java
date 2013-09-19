@@ -5,8 +5,10 @@ import java.io.*;
 //import java.text.ParseException;
 import java.util.*;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
+@SuppressLint("DefaultLocale")
 abstract public class LearningProject {
 	
 	private String name;
@@ -111,15 +113,19 @@ abstract public class LearningProject {
 	abstract public void addNewItems();
 	abstract public void addNewItems(int n);
 	
-	public void right(){
-		Sound.right.start();
+	public void right(boolean audioOnOff){
+		if (audioOnOff) {
+			Sound.right.start();
+		}
 		cardStatus.right();
 		// put it in the appropriate index set
 		indexSets.get(cardStatus.getLevel()).add(cardStatus.getIndex());
 	}
 	
-	public void wrong(){
-		Sound.wrong.start();
+	public void wrong(boolean audioOnOff){
+		if (audioOnOff) {
+			Sound.wrong.start();
+		}
 		cardStatus.wrong();
 		// return to the deck
 		deck.put(cardStatus);		
