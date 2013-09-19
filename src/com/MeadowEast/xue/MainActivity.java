@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -19,7 +20,7 @@ import android.content.SharedPreferences;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button ecButton, ceButton, exitButton, settingsButton;
+	Button ecButton, ceButton, exitButton;
 	public static String packageName;
 	public static File filesDir;
 	public static String mode;
@@ -34,14 +35,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		packageName = getApplicationContext().getPackageName();
+		// button setup
 		ecButton = (Button) findViewById(R.id.ecButton);
 		ceButton = (Button) findViewById(R.id.ceButton);
 		exitButton = (Button) findViewById(R.id.exitButton);
-		settingsButton = (Button) findViewById(R.id.settings_button);
 		ecButton.setOnClickListener(this);
 		ceButton.setOnClickListener(this);
 		exitButton.setOnClickListener(this);
-		settingsButton.setOnClickListener(this);
 		File sdCard = Environment.getExternalStorageDirectory();
 		filesDir = new File(sdCard.getAbsolutePath() + "/Android/data/com.MeadowEast.xue/files");
 		Log.d(TAG, "xxx filesDir=" + filesDir);
@@ -91,10 +91,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			i = new Intent(this, LearnActivity.class);
 			startActivity(i);
 			break;
-    	case R.id.settings_button:
-    		i = new Intent(this, SettingsActivity.class);    		
-    		startActivity(i);
-			break;
     	case R.id.exitButton:
     		finish();
 			break;
@@ -107,6 +103,16 @@ public class MainActivity extends Activity implements OnClickListener {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_settings:
+    		Intent i = new Intent(this, SettingsActivity.class);    		
+    		startActivity(i);
+			break;
+        }
+        return true;
+    }
 
 	public void displayMessage(final String msg) {
 		runOnUiThread(new Runnable() {
