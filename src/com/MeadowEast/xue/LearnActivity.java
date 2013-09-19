@@ -62,10 +62,10 @@ public class LearnActivity extends Activity implements OnClickListener,
     	findViewById(R.id.answerTextView).setOnLongClickListener(this);
     	findViewById(R.id.otherTextView).setOnLongClickListener(this);
     	
-    	int deckSize = getDeckSize();
+    	int deckSize = getECDeckSize();
     	if (MainActivity.mode.equals("ec"))
  //   		lp = new EnglishChineseProject(ECDECKSIZE);	
-    		lp = new EnglishChineseProject(deckSize);
+    		lp = new EnglishChineseProject(getECDeckSize());
     	else
  //   		lp = new ChineseEnglishProject(CEDECKSIZE);
     		lp = new ChineseEnglishProject(deckSize);
@@ -211,7 +211,6 @@ public class LearnActivity extends Activity implements OnClickListener,
 
 	}
 
-	// Rename
 	private final Runnable timerMetronome = new Runnable() {
 		public void run() {
 			seconds += 1;
@@ -276,8 +275,13 @@ public class LearnActivity extends Activity implements OnClickListener,
 		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
     }
     
-    public int getDeckSize() {
+    public int getECDeckSize() {
 		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_key), SettingsActivity.DEFAULT_DECK_SIZE);	
+		return settings.getInt(getString(R.string.deck_size_ec_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);	
+    } 
+    
+    public int getCEDeckSize() {
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ce_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);	
     }
 }

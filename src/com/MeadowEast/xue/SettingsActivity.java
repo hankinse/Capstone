@@ -19,13 +19,14 @@ import com.MeadowEast.xue.Updater;
 public class SettingsActivity extends Activity implements OnClickListener {
 	Button updateButton;
 	ToggleButton audioButton;
-	NumberPicker deckSizePicker;
+	NumberPicker ecDeckSizePicker, ceDeckSizePicker;
 	public static SharedPreferences settings;
 	public static File filesDir;
 	static final String TAG = "XUE SettingsActivity";
 	public static final int DECK_MIN_SIZE = 5;
 	public static final int DECK_MAX_SIZE = 500;
-	public static final int DEFAULT_DECK_SIZE = 50;
+	public static final int DEFAULT_EC_DECK_SIZE = 50;
+	public static final int DEFAULT_CE_DECK_SIZE = 50;
 	
 	
     @Override
@@ -39,12 +40,12 @@ public class SettingsActivity extends Activity implements OnClickListener {
     	audioButton = (ToggleButton) findViewById(R.id.audio_on_off_button);
     	audioButton.setOnClickListener(this);
     	audioButton.setChecked(audioOn());
-    	deckSizePicker = (NumberPicker) findViewById(R.id.deck_size_picker);
-    	deckSizePicker.setOnClickListener(this);
-    	deckSizePicker.setMaxValue(DECK_MAX_SIZE);
-    	deckSizePicker.setMinValue(DECK_MIN_SIZE);
-    	deckSizePicker.setValue(getDeckSize());
-    	deckSizePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+    	ecDeckSizePicker = (NumberPicker) findViewById(R.id.deck_size_picker);
+    	ecDeckSizePicker.setOnClickListener(this);
+    	ecDeckSizePicker.setMaxValue(DECK_MAX_SIZE);
+    	ecDeckSizePicker.setMinValue(DECK_MIN_SIZE);
+    	ecDeckSizePicker.setValue(getECDeckSize());
+    	ecDeckSizePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     	File sdCard = Environment.getExternalStorageDirectory();
 		filesDir = new File (sdCard.getAbsolutePath() + "/Android/data/com.MeadowEast.xue/files");
 		Log.d(TAG, "xxx filesDir="+filesDir);
@@ -53,14 +54,14 @@ public class SettingsActivity extends Activity implements OnClickListener {
     @Override
     public void onStart() {
     	super.onStart();
-    	deckSizePicker.setValue(getDeckSize());
+    	ecDeckSizePicker.setValue(getECDeckSize());
     }
     
     @Override
 	protected void onPause() {
     	super.onPause();
     	Log.d(TAG, "onPause()");
-    	setDeckSize(deckSizePicker.getValue());
+    	setECDeckSize(ecDeckSizePicker.getValue());
     	setAudioOnOff(audioButton.isChecked());
     }
     
@@ -103,17 +104,32 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "Turned audio on to: " + isOn);
 	}
 	
-	public int getDeckSize() {
+	public int getECDeckSize() {
 		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		int size = settings.getInt(getString(R.string.deck_size_key), DEFAULT_DECK_SIZE);
+		int size = settings.getInt(getString(R.string.deck_size_ec_key), DEFAULT_EC_DECK_SIZE);
 		Log.d(TAG, "Current deck size: " + size);
 		return size;
 	}
 	
-	public void setDeckSize(int size) {
+	public void setECDeckSize(int size) {
 		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(getString(R.string.deck_size_key), size);
+		editor.putInt(getString(R.string.deck_size_ec_key), size);
+		editor.commit();
+		Log.d(TAG, "Set deck size to: " + size);
+	}
+	
+	public int getCEDeckSize() {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		int size = settings.getInt(getString(R.string.deck_size_ce_key), DEFAULT_CE_DECK_SIZE);
+		Log.d(TAG, "Current deck size: " + size);
+		return size;
+	}
+	
+	public void setCEDeckSize(int size) {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(getString(R.string.deck_size_ce_key), size);
 		editor.commit();
 		Log.d(TAG, "Set deck size to: " + size);
 	}

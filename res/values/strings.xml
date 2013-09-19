@@ -21,6 +21,7 @@
     <string name="audio_setting_text">Audio feedback:</string>
     <string name="deck_size_text">Deck Size:</string>
     <string name="audio_state_on_off">audio_on_off</string>
-    <string name="deck_size_key">deck_size_key</string>
+    <string name="deck_size_ec_key">deck_size_ec_key</string>
+    <string name="deck_size_ce_key">deck_size_ce_key</string>
 
 </resources>
