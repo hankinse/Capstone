@@ -89,7 +89,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		} else if (itemsShown == 3){
 			// Got it wrong
 			advance.setText("show");
-			lp.wrong(SettingsActivity.audioOn(settings));
+			lp.wrong(audioOn());
 			lp.next();
 			clearContent();
 			prompt.setText(lp.prompt());
@@ -119,7 +119,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		// Do nothing unless answer has been seen
 		if (itemsShown < 2) return;
 		// Got it right
-		lp.right(SettingsActivity.audioOn(settings));
+		lp.right(audioOn());
 		if (lp.next()){
 			advance.setText("show");
 			clearContent();
@@ -180,5 +180,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
         } else {
         	return super.onKeyDown(keyCode, event);
         }
+    }
+    
+    public boolean audioOn() {
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
     }
 }

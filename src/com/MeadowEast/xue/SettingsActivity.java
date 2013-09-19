@@ -34,7 +34,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
     	updateButton.setOnClickListener(this);
     	audioButton = (ToggleButton) findViewById(R.id.audio_on_off_button);
     	audioButton.setOnClickListener(this);
-    	audioButton.setChecked(audioOn(settings));
+    	audioButton.setChecked(audioOn());
     	deckSizePicker = (NumberPicker) findViewById(R.id.deck_size_picker);
     	deckSizePicker.setOnClickListener(this);
     	File sdCard = Environment.getExternalStorageDirectory();
@@ -45,23 +45,21 @@ public class SettingsActivity extends Activity implements OnClickListener {
     @Override
     public void onStart() {
     	super.onStart();
-    	deckSizePicker.setValue(getDeckSize(settings));
+    	deckSizePicker.setValue(getDeckSize());
     }
     
     @Override
 	protected void onPause() {
     	super.onPause();
-    	Log.d(TAG, "onPause()");
-    	setDeckSize(settings, deckSizePicker.getValue());
-    	setAudioOnOff(settings, audioButton.isChecked());
+    	
     }
     
     @Override
     public void onStop() {
     	super.onStop();
     	Log.d(TAG, "onStop()");
-    	setDeckSize(settings, deckSizePicker.getValue());
-    	setAudioOnOff(settings, audioButton.isChecked());
+    	setDeckSize(deckSizePicker.getValue());
+    	setAudioOnOff(audioButton.isChecked());
     }
     
 	public void onClick(View arg0) {
@@ -75,29 +73,38 @@ public class SettingsActivity extends Activity implements OnClickListener {
 				}
 			}.start(); 
 			break;
+	   	case R.id.audio_on_off_button:
+	   		Log.d(TAG, "Setting audio on/off: " + audioButton.isChecked());
+	   		setAudioOnOff(audioButton.isChecked());
+	   		break;
 	   	}
+	   	
 	}
 
-	public static boolean audioOn(SharedPreferences settings) {
-		boolean isOn = settings.getBoolean("audio_on_off", true);
+	public boolean audioOn() {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		boolean isOn = settings.getBoolean(getString(R.string.audio_state_on_off), true);
 		Log.d(TAG, "Audio feedback is currently: " + isOn);
 		return isOn;
 	}
 	
-	public static void setAudioOnOff(SharedPreferences settings, boolean onOff) {
+	public void setAudioOnOff(boolean isOn) {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putBoolean("audio_on_off", onOff);
+		editor.putBoolean(getString(R.string.audio_state_on_off), isOn);
 		editor.commit();
-		Log.d(TAG, "Turning audio on to: " + onOff);
+		Log.d(TAG, "Turned audio on to: " + isOn);
 	}
 	
-	public static int getDeckSize(SharedPreferences settings) {
+	public int getDeckSize() {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		int size = settings.getInt("deck_size", 50);
 		Log.d(TAG, "Current deck size: " + size);
 		return size;
 	}
 	
-	public static void setDeckSize(SharedPreferences settings, int size) {
+	public void setDeckSize(int size) {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt("deck_size", size);
 		editor.commit();

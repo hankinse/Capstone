@@ -20,5 +20,6 @@
     <string name="file_version_id">file_version</string>
     <string name="audio_setting_text">Auido feedback:</string>
     <string name="deck_size_text">Deck Size:</string>
+    <string name="audio_state_on_off">audio_on_off</string>
 
 </resources>
