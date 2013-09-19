@@ -26,8 +26,8 @@ import android.widget.Toast;
 public class LearnActivity extends Activity implements OnClickListener,
 		OnLongClickListener {
 	static final String TAG = "LearnActivity";
-	static final int ECDECKSIZE = 40;
-	static final int CEDECKSIZE = 60;
+//	static final int ECDECKSIZE = 40;
+//	static final int CEDECKSIZE = 60;
 
 	static Handler timerHandler;
 	static int seconds;
@@ -183,16 +183,16 @@ public class LearnActivity extends Activity implements OnClickListener,
 	public boolean onLongClick(View v) {
 		switch (v.getId()) {
 		case R.id.promptTextView:
-			mdbg(prompt);
+			handleLongPress(prompt);
 			break;
-
 		case R.id.answerTextView:
-			mdbg(answer);
-
+			handleLongPress(answer);
 			break;
 		case R.id.otherTextView:
-			mdbg(other);
-
+			handleLongPress(other);
+			break;
+		default:
+			reportError();
 			break;
 		}
 		return true;
@@ -211,9 +211,10 @@ public class LearnActivity extends Activity implements OnClickListener,
 
 	}
 
+	// Rename
 	private final Runnable runnable = new Runnable() {
 		public void run() {
-			seconds = seconds + 1;
+			seconds += 1;
 			int minutes = seconds / 60;
 			int hours = minutes / 60;
 
@@ -228,18 +229,25 @@ public class LearnActivity extends Activity implements OnClickListener,
 		}
 	};
 
-	public void mdbg(TextView text) {
+	public void handleLongPress(TextView text) {
 		String str = text.getText().toString();
 		int start = text.getSelectionStart();
 		int end = text.getSelectionEnd();
+		if (end - start > 0) {
 		str = str.substring(start, end);
-
-		Intent browserIntent = new Intent(
-				Intent.ACTION_VIEW,
-				Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb="
-						+ str));
-		startActivity(browserIntent);
-
+			Intent browserIntent = new Intent(
+					Intent.ACTION_VIEW,
+					Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb="
+							+ str));
+			startActivity(browserIntent);
+		}
+		else {
+			reportError();
+		}
+	}
+	
+	public void reportError() {
+		Toast.makeText(this, "Item index: "+lp.currentIndex(), Toast.LENGTH_LONG).show();
 	}
 
     @Override
