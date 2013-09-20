@@ -30,7 +30,8 @@ public class LearnActivity extends Activity implements OnClickListener,
 	static final int CEDECKSIZE = 60;
 
 	static Handler timerHandler;
-	static int seconds;
+	int seconds;
+	long lastTime;
 
 	SharedPreferences settings;
 	LearningProject lp;
@@ -71,9 +72,11 @@ public class LearnActivity extends Activity implements OnClickListener,
     		lp = new ChineseEnglishProject(deckSize);
     	clearContent();
     	doAdvance();
-
+    	
     	seconds = 0;
+    	lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
+		
 
 	}
 
@@ -201,19 +204,28 @@ public class LearnActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		lastTime = System.currentTimeMillis();
 		timerHandler.postDelayed(runnable, 1000);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		timerHandler.removeCallbacks(runnable);
 
+		long current = System.currentTimeMillis();
+		long delta = current - lastTime;
+		lastTime = current;
+		seconds += (int) (delta / 1000);
+		
+		timerHandler.removeCallbacks(runnable);
 	}
 
 	private final Runnable runnable = new Runnable() {
 		public void run() {
-			seconds = seconds + 1;
+			long current = System.currentTimeMillis();
+			long delta = current - lastTime;
+			lastTime = current;
+			seconds += (int) (delta / 1000);
 			int minutes = seconds / 60;
 			int hours = minutes / 60;
 
