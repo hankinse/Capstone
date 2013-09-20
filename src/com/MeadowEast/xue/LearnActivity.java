@@ -26,8 +26,8 @@ import android.widget.Toast;
 public class LearnActivity extends Activity implements OnClickListener,
 		OnLongClickListener {
 	static final String TAG = "LearnActivity";
-	static final int ECDECKSIZE = 40;
-	static final int CEDECKSIZE = 60;
+//	static final int ECDECKSIZE = 40;
+//	static final int CEDECKSIZE = 60;
 
 	static Handler timerHandler;
 	int seconds;
@@ -63,10 +63,10 @@ public class LearnActivity extends Activity implements OnClickListener,
     	findViewById(R.id.answerTextView).setOnLongClickListener(this);
     	findViewById(R.id.otherTextView).setOnLongClickListener(this);
     	
-    	int deckSize = getDeckSize();
+    	int deckSize = getECDeckSize();
     	if (MainActivity.mode.equals("ec"))
  //   		lp = new EnglishChineseProject(ECDECKSIZE);	
-    		lp = new EnglishChineseProject(deckSize);
+    		lp = new EnglishChineseProject(getECDeckSize());
     	else
  //   		lp = new ChineseEnglishProject(CEDECKSIZE);
     		lp = new ChineseEnglishProject(deckSize);
@@ -186,16 +186,16 @@ public class LearnActivity extends Activity implements OnClickListener,
 	public boolean onLongClick(View v) {
 		switch (v.getId()) {
 		case R.id.promptTextView:
-			mdbg(prompt);
+			handleLongPress(prompt);
 			break;
-
 		case R.id.answerTextView:
-			mdbg(answer);
-
+			handleLongPress(answer);
 			break;
 		case R.id.otherTextView:
-			mdbg(other);
-
+			handleLongPress(other);
+			break;
+		default:
+			reportError();
 			break;
 		}
 		return true;
@@ -205,22 +205,23 @@ public class LearnActivity extends Activity implements OnClickListener,
 	protected void onResume() {
 		super.onResume();
 		lastTime = System.currentTimeMillis();
-		timerHandler.postDelayed(runnable, 1000);
+		timerHandler.postDelayed(timerMetronome, 1000);
+
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
+		timerHandler.removeCallbacks(timerMetronome);
 		long current = System.currentTimeMillis();
 		long delta = current - lastTime;
 		lastTime = current;
 		seconds += (int) (delta / 1000);
 		
-		timerHandler.removeCallbacks(runnable);
+		
 	}
 
-	private final Runnable runnable = new Runnable() {
+	private final Runnable timerMetronome = new Runnable() {
 		public void run() {
 			long current = System.currentTimeMillis();
 			long delta = current - lastTime;
@@ -236,22 +237,29 @@ public class LearnActivity extends Activity implements OnClickListener,
 			else
 				timer.setText(String.format("%d:%02d", minutes, seconds % 60));
 
-			timerHandler.postDelayed(runnable, 1000);
+			timerHandler.postDelayed(timerMetronome, 1000);
 		}
 	};
 
-	public void mdbg(TextView text) {
+	public void handleLongPress(TextView text) {
 		String str = text.getText().toString();
 		int start = text.getSelectionStart();
 		int end = text.getSelectionEnd();
+		if (end - start > 0) {
 		str = str.substring(start, end);
-
-		Intent browserIntent = new Intent(
-				Intent.ACTION_VIEW,
-				Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb="
-						+ str));
-		startActivity(browserIntent);
-
+			Intent browserIntent = new Intent(
+					Intent.ACTION_VIEW,
+					Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb="
+							+ str));
+			startActivity(browserIntent);
+		}
+		else {
+			reportError();
+		}
+	}
+	
+	public void reportError() {
+		Toast.makeText(this, "Item index: "+lp.currentIndex(), Toast.LENGTH_LONG).show();
 	}
 
     @Override
@@ -280,8 +288,13 @@ public class LearnActivity extends Activity implements OnClickListener,
 		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
     }
     
-    public int getDeckSize() {
+    public int getECDeckSize() {
 		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_key), SettingsActivity.DEFAULT_DECK_SIZE);	
+		return settings.getInt(getString(R.string.deck_size_ec_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);	
+    } 
+    
+    public int getCEDeckSize() {
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ce_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);	
     }
 }
