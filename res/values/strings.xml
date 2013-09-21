@@ -23,5 +23,8 @@
     <string name="audio_state_on_off">audio_on_off</string>
     <string name="deck_size_ec_key">deck_size_ec_key</string>
     <string name="deck_size_ce_key">deck_size_ce_key</string>
+    <string name="audio_header">Audio</string>
+    <string name="english_chinese_header_text">English-Chinese Settings</string>
+    <string name="chinese_english_header_text">Chinese-English Settings</string>
 
 </resources>

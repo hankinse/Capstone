@@ -63,13 +63,10 @@ public class LearnActivity extends Activity implements OnClickListener,
     	findViewById(R.id.answerTextView).setOnLongClickListener(this);
     	findViewById(R.id.otherTextView).setOnLongClickListener(this);
     	
-    	int deckSize = getECDeckSize();
     	if (MainActivity.mode.equals("ec"))
- //   		lp = new EnglishChineseProject(ECDECKSIZE);	
     		lp = new EnglishChineseProject(getECDeckSize());
     	else
- //   		lp = new ChineseEnglishProject(CEDECKSIZE);
-    		lp = new ChineseEnglishProject(deckSize);
+    		lp = new ChineseEnglishProject(getCEDeckSize());
     	clearContent();
     	doAdvance();
     	
