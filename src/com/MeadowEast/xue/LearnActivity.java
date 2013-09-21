@@ -30,8 +30,7 @@ import android.widget.Toast;
 
 public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
-	//	static final int ECDECKSIZE = 40;
-	//	static final int CEDECKSIZE = 60;
+	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
 
 	static Handler timerHandler;
 	int seconds;
@@ -281,7 +280,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 
 				errorComment = (EditText) errorReportDialogView.findViewById(R.id.commentEditText);
 				Intent emailIntent = new Intent(Intent.ACTION_SEND);
-				emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "brokenspicerack@gmail.com" });
+				emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { BUG_EMAIL });
 				emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: " + lp.currentIndex());
 				emailIntent.putExtra(Intent.EXTRA_TEXT, "Xue Error Report, ID: " + lp.currentIndex() + "\n" + errorComment.getText().toString());
 				emailIntent.setType("message/rfc822");
