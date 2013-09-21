@@ -23,5 +23,10 @@
     <string name="audio_state_on_off">audio_on_off</string>
     <string name="deck_size_ec_key">deck_size_ec_key</string>
     <string name="deck_size_ce_key">deck_size_ce_key</string>
+    <string name="sendReport">Send Report</string>
+    <string name="cancel">Cancel</string>
+    <string name="comment">Comment</string>
+    <string name="reportDialog">Please describe the error on this card. </string>
+    
 
 </resources>
