@@ -275,15 +275,17 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 
 	public void reportError() {
 		LayoutInflater inflater = getLayoutInflater();
-		final View view = inflater.inflate(R.layout.dialog_report, null);
-		new AlertDialog.Builder(this).setTitle("Error Report").setView(view).setPositiveButton("Report Error", new DialogInterface.OnClickListener() {
+		final View errorReportDialogView = inflater.inflate(R.layout.dialog_report, null);
+		new AlertDialog.Builder(this).setTitle("Error Report")
+		.setView(errorReportDialogView)
+		.setPositiveButton("Report Error", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 
-				errorComment = (EditText) view.findViewById(R.id.commentEditText);
+				errorComment = (EditText) errorReportDialogView.findViewById(R.id.commentEditText);
 				Intent emailIntent = new Intent(Intent.ACTION_SEND);
 				emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "brokenspicerack@gmail.com" });
 				emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: " + lp.currentIndex());
-				emailIntent.putExtra(Intent.EXTRA_TEXT, errorComment.getText().toString());
+				emailIntent.putExtra(Intent.EXTRA_TEXT, "Xue Error Report, ID: " + lp.currentIndex() + "\n" + errorComment.getText().toString());
 				emailIntent.setType("message/rfc822");
 
 				try {
@@ -293,11 +295,11 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 				}
 			}
 		}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
+			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
 		}).show();
-		
+
 		Toast.makeText(this, "Item index: " + lp.currentIndex(), Toast.LENGTH_LONG).show();
 
 	}
