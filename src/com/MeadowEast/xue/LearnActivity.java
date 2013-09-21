@@ -52,33 +52,31 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		Log.d(TAG, "Entering onCreate");
 		context = this.getApplicationContext();
 
-		itemsShown = 0;
-		prompt = (TextView) findViewById(R.id.promptTextView);
-		status = (TextView) findViewById(R.id.statusTextView);
-		other = (TextView) findViewById(R.id.otherTextView);
-		answer = (TextView) findViewById(R.id.answerTextView);
-		advance = (Button) findViewById(R.id.advanceButton);
-		okay = (Button) findViewById(R.id.okayButton);
-		timer = (TextView) findViewById(R.id.timerTextView);
-		findViewById(R.id.advanceButton).setOnClickListener(this);
-		findViewById(R.id.okayButton).setOnClickListener(this);
-
-		findViewById(R.id.promptTextView).setOnLongClickListener(this);
-		findViewById(R.id.answerTextView).setOnLongClickListener(this);
-		findViewById(R.id.otherTextView).setOnLongClickListener(this);
-
-		int deckSize = getECDeckSize();
-		if (MainActivity.mode.equals("ec"))
-		//   		lp = new EnglishChineseProject(ECDECKSIZE);	
-		lp = new EnglishChineseProject(getECDeckSize());
-		else
-			//   		lp = new ChineseEnglishProject(CEDECKSIZE);
-			lp = new ChineseEnglishProject(deckSize);
-		clearContent();
-		doAdvance();
-
-		seconds = 0;
-		lastTime = System.currentTimeMillis();
+        itemsShown = 0;
+        prompt  = (TextView) findViewById(R.id.promptTextView);
+        status  = (TextView) findViewById(R.id.statusTextView);
+        other   = (TextView) findViewById(R.id.otherTextView);
+        answer  = (TextView) findViewById(R.id.answerTextView);
+        advance  = (Button) findViewById(R.id.advanceButton);
+        okay     = (Button) findViewById(R.id.okayButton);
+        timer	= (TextView) findViewById(R.id.timerTextView);
+    	   
+    	findViewById(R.id.advanceButton).setOnClickListener(this);
+    	findViewById(R.id.okayButton).setOnClickListener(this);
+    	
+    	findViewById(R.id.promptTextView).setOnLongClickListener(this);
+    	findViewById(R.id.answerTextView).setOnLongClickListener(this);
+    	findViewById(R.id.otherTextView).setOnLongClickListener(this);
+    	
+    	if (MainActivity.mode.equals("ec"))
+    		lp = new EnglishChineseProject(getECDeckSize());
+    	else
+    		lp = new ChineseEnglishProject(getCEDeckSize());
+    	clearContent();
+    	doAdvance();
+    	
+    	seconds = 0;
+    	lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
 
 	}

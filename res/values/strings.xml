@@ -27,6 +27,8 @@
     <string name="cancel">Cancel</string>
     <string name="comment">Comment</string>
     <string name="reportDialog">Please describe the error on this card. </string>
+    <string name="audio_header">Audio</string>
+    <string name="english_chinese_header_text">English-Chinese Settings</string>
+    <string name="chinese_english_header_text">Chinese-English Settings</string>
     
-
 </resources>
