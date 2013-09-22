@@ -18,4 +18,10 @@ public class Deck {
 	public int size(){
 		return cardStatusQueue.size();
 	}
+	public void putFront(CardStatus cs) {
+		cardStatusQueue.addFirst(cs);
+	}
+	public CardStatus popBack() {
+		return cardStatusQueue.removeLast();
+	}
 }

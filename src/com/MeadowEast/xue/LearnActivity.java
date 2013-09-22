@@ -41,8 +41,9 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	int itemsShown;
 	TextView prompt, answer, other, status, timer;
 	EditText errorComment;
-	Button advance, okay;
+	Button advance, okay, undo;
 	static Context context;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,10 +59,12 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
         answer  = (TextView) findViewById(R.id.answerTextView);
         advance  = (Button) findViewById(R.id.advanceButton);
         okay     = (Button) findViewById(R.id.okayButton);
+        undo	= (Button) findViewById(R.id.undoButton);
         timer	= (TextView) findViewById(R.id.timerTextView);
     	   
     	findViewById(R.id.advanceButton).setOnClickListener(this);
     	findViewById(R.id.okayButton).setOnClickListener(this);
+    	findViewById(R.id.undoButton).setOnClickListener(this);
     	
     	findViewById(R.id.promptTextView).setOnLongClickListener(this);
     	findViewById(R.id.answerTextView).setOnLongClickListener(this);
@@ -161,6 +164,15 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			clearContent();
 		}
 	}
+	
+	public void doUndo() {
+		if (lp.undo()) {
+			clearContent();
+			itemsShown = 1;
+			prompt.setText(lp.prompt());
+			status.setText(lp.deckStatus());
+		}
+	}
 
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -169,6 +181,9 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			break;
 		case R.id.okayButton:
 			doOkay();
+			break;
+		case R.id.undoButton:
+			doUndo();
 			break;
 		// case R.id.promptTextView:
 		// case R.id.answerTextView:

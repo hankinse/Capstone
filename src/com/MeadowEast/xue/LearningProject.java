@@ -20,10 +20,13 @@ abstract public class LearningProject {
 	protected Card card = null;	
 	final static String TAG = "CC LearningProject";
 	
+	private Stack<CardStatus> undoStack;
+	
 	public LearningProject(String name, int n) {
 		this.n = n;
 		this.name = name;
 		this.seen = 0;
+		this.undoStack = new Stack<CardStatus>();
 		Log.d(TAG, "Creating index sets");
 		indexSets = new ArrayList<IndexSet>();
 		for (int i=0; i<5; ++i){
@@ -118,6 +121,8 @@ abstract public class LearningProject {
 			Sound.right.start();
 		}
 		cardStatus.right();
+		undoStack.push(cardStatus);
+		
 		// put it in the appropriate index set
 		indexSets.get(cardStatus.getLevel()).add(cardStatus.getIndex());
 	}
@@ -127,13 +132,41 @@ abstract public class LearningProject {
 			Sound.wrong.start();
 		}
 		cardStatus.wrong();
+		undoStack.push(cardStatus);
+		
 		// return to the deck
 		deck.put(cardStatus);		
 	}
 	
+	public boolean undo() {
+		if (undoStack.isEmpty()) {
+			return false;
+		}
+		// Return the current card to the deck.
+		deck.putFront(cardStatus);
+		// And get the card from the undoStack.
+		cardStatus = undoStack.pop();
+		card = AllCards.getCard(cardStatus.getIndex());
+		if (cardStatus.changedLevel()) {	// If it changed levels, put it back in the right indexSet.
+			indexSets.get(cardStatus.getLevel()).remove(cardStatus.getIndex());
+			indexSets.get(cardStatus.getPreviousLevel()).add(cardStatus.getIndex());
+		}
+		cardStatus.undo();
+		if (cardStatus.wasCorrect()) {
+			// It was taken out of the deck, so we're happy now.
+		}
+		else {
+			// If they got it wrong, it went back in the deck.
+			// That means we need to take it off the back of the deck.
+			deck.popBack();
+		}
+		seen--;
+		return true;
+	}
+	
 	String deckStatus(){
 		String left = (deck.size()+1)+" left";
-		return seen > n ? left : seen + " of " + n + " seen, " + left; 
+		return seen > n ? left : seen + " of " + n + " seen, " + left;
 	}
 	
 	String queueStatus(){
