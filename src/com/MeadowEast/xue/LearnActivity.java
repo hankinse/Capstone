@@ -31,10 +31,11 @@ import android.widget.Toast;
 public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
+	static final int TIMER_UPDATE_INTERVAL = 500;
 
 	static Handler timerHandler;
-	int seconds;
 	long lastTime;
+	long millis;
 
 	SharedPreferences settings;
 	LearningProject lp;
@@ -77,7 +78,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
     	clearContent();
     	doAdvance();
     	
-    	seconds = 0;
+    	millis = 0;
     	lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
 
@@ -215,7 +216,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	protected void onResume() {
 		super.onResume();
 		lastTime = System.currentTimeMillis();
-		timerHandler.postDelayed(timerMetronome, 1000);
+		timerHandler.postDelayed(timerMetronome, TIMER_UPDATE_INTERVAL);
 
 	}
 
@@ -226,7 +227,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		long current = System.currentTimeMillis();
 		long delta = current - lastTime;
 		lastTime = current;
-		seconds += (int) (delta / 1000);
+		millis += delta;
 
 	}
 
@@ -235,7 +236,8 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			long current = System.currentTimeMillis();
 			long delta = current - lastTime;
 			lastTime = current;
-			seconds += (int) (delta / 1000);
+			millis += delta;
+			int seconds = (int) (millis / 1000);
 			int minutes = seconds / 60;
 			int hours = minutes / 60;
 
@@ -244,7 +246,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			else
 				timer.setText(String.format("%d:%02d", minutes, seconds % 60));
 
-			timerHandler.postDelayed(timerMetronome, 1000);
+			timerHandler.postDelayed(timerMetronome, TIMER_UPDATE_INTERVAL);
 		}
 	};
 
