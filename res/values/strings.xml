@@ -30,5 +30,8 @@
     <string name="audio_header">Audio</string>
     <string name="english_chinese_header_text">English-Chinese Settings</string>
     <string name="chinese_english_header_text">Chinese-English Settings</string>
+    <string name="target_explain_text">Maximum Learning Set:</string>
+    <string name="target_text">Max Learning Set</string>
+    <string name="target_hint">max cards</string>
     
 </resources>
