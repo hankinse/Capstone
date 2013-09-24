@@ -31,7 +31,7 @@ import android.widget.Toast;
 public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
-	static final int TIMER_UPDATE_INTERVAL = 500;
+	static final int TIMER_UPDATE_INTERVAL = 500;	// In milliseconds.
 
 	static Handler timerHandler;
 	long lastTime;
