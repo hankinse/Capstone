@@ -36,7 +36,7 @@
 	        android:layout_height="wrap_content" >
 	
 	        <TextView
-	            android:id="@+id/English_Chinese_Header"
+	            android:id="@+id/English_Chinese_Header2"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="@string/english_chinese_header_text"
@@ -115,7 +115,7 @@
 	        android:orientation="vertical" >
 	
 	        <TextView
-	            android:id="@+id/chinese_english_header"
+	            android:id="@+id/chinese_english_header2"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="@string/chinese_english_header_text"

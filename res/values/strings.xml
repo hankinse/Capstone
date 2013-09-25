@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Xue</string>
@@ -35,5 +36,9 @@
     <string name="target_hint">This sets the maximum size of the pool of cards you currently learning.  The default is 700.</string>
     <string name="target_ec">target_ec</string>
     <string name="target_ce">target_ce</string>
-    
+    <string name="title_activity_stat">StatActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="stat_header_text">User Statistics</string>
+    <string name="last_deck_date_text">"Last deck completed: "</string>
+
 </resources>
