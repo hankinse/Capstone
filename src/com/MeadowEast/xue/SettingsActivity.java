@@ -45,6 +45,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
     	audioButton.setChecked(audioOn());
     	ceTargetField = (EditText) findViewById(R.id.target_ce_field);
     	ecTargetField = (EditText) findViewById(R.id.target_ec_field);
+    	ceTargetField.setHint("Currently " + getCETarget() + " cards.");
+    	ecTargetField.setHint("Currently " + getECTarget() + " cards.");
     	
     	ecDeckSizePicker = (NumberPicker) findViewById(R.id.deck_size_picker);
     	ecDeckSizePicker.setOnClickListener(this);
@@ -176,7 +178,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	private void setCETarget(int target) {
 		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(getString(R.string.target_ec), target);
+		editor.putInt(getString(R.string.target_ce), target);
 		editor.commit();
 		Log.d(TAG, "Set CE target to: " + target);
 		
@@ -190,7 +192,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	private void setECTarget(int target) {
 		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(getString(R.string.target_ce), target);
+		editor.putInt(getString(R.string.target_ec), target);
 		editor.commit();
 		Log.d(TAG, "Set CE target to: " + target);
 	}
