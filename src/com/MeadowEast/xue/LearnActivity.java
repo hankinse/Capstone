@@ -58,8 +58,8 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
         status  = (TextView) findViewById(R.id.statusTextView);
         other   = (TextView) findViewById(R.id.otherTextView);
         answer  = (TextView) findViewById(R.id.answerTextView);
-        advance  = (Button) findViewById(R.id.advanceButton);
-        okay     = (Button) findViewById(R.id.okayButton);
+        advance = (Button) findViewById(R.id.advanceButton);
+        okay    = (Button) findViewById(R.id.okayButton);
         undo	= (Button) findViewById(R.id.undoButton);
         timer	= (TextView) findViewById(R.id.timerTextView);
     	   
@@ -72,9 +72,9 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
     	findViewById(R.id.otherTextView).setOnLongClickListener(this);
     	
     	if (MainActivity.mode.equals("ec"))
-    		lp = new EnglishChineseProject(getECDeckSize());
+    		lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
     	else
-    		lp = new ChineseEnglishProject(getCEDeckSize());
+    		lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
     	clearContent();
     	doAdvance();
     	
@@ -348,4 +348,13 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		return settings.getInt(getString(R.string.deck_size_ce_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);
 	}
 
+	public int getECTarget() {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ec), SettingsActivity.DEFAULT_TARGET);
+	}
+
+	public int getCETarget() {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ce), SettingsActivity.DEFAULT_TARGET);
+	}
 }

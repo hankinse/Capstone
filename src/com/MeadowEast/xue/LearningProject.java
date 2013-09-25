@@ -19,11 +19,10 @@ abstract public class LearningProject {
 	protected CardStatus cardStatus = null;
 	protected Card card = null;	
 	final static String TAG = "CC LearningProject";
-	final static int TARGET_DEFAULT = 700;
 	
 	private Stack<CardStatus> undoStack;
 	
-	public LearningProject(String name, int n) {
+	public LearningProject(String name, int n, int target) {
 		this.n = n;
 		this.name = name;
 		this.seen = 0;
@@ -37,7 +36,7 @@ abstract public class LearningProject {
 		Log.d(TAG, "Reading status");
 		readStatus();
 		Log.d(TAG, "Making deck");
-		deck = makeDeck(n, TARGET_DEFAULT);
+		deck = makeDeck(n, target);
 		Log.d(TAG, "Exiting LearningProject constructor");
 	}	
 	

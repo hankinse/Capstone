@@ -32,6 +32,8 @@
     <string name="chinese_english_header_text">Chinese-English Settings</string>
     <string name="target_explain_text">Maximum Learning Set:</string>
     <string name="target_text">Max Learning Set</string>
-    <string name="target_hint">max cards</string>
+    <string name="target_hint">This sets the maximum size of the pool of cards you currently learning.  The default is 700.</string>
+    <string name="target_ec">target_ec</string>
+    <string name="target_ce">target_ce</string>
     
 </resources>

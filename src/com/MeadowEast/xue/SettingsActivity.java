@@ -10,20 +10,28 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.ToggleButton;
 
 
 public class SettingsActivity extends Activity implements OnClickListener {
-	ToggleButton audioButton;
-	NumberPicker ecDeckSizePicker, ceDeckSizePicker;
-	public static SharedPreferences settings;
-	public static File filesDir;
-	static final String TAG = "XUE SettingsActivity";
 	public static final int DECK_MIN_SIZE = 3;
 	public static final int DECK_MAX_SIZE = 1000;
 	public static final int DEFAULT_EC_DECK_SIZE = 50;
 	public static final int DEFAULT_CE_DECK_SIZE = 50;
+	public static final int DEFAULT_TARGET = 700;
+	public static final int TARGET_EC_MAX = 1000;
+	public static final int TARGET_EC_MIN = 50;
+	public static final int TARGET_CE_MAX = 1000;
+	public static final int TARGET_CE_MIN = 50;
+	
+	ToggleButton audioButton;
+	NumberPicker ecDeckSizePicker, ceDeckSizePicker;
+	EditText ecTargetField, ceTargetField;
+	public static SharedPreferences settings;
+	public static File filesDir;
+	static final String TAG = "XUE SettingsActivity";
 	
 	
     @Override
@@ -35,6 +43,9 @@ public class SettingsActivity extends Activity implements OnClickListener {
     	audioButton = (ToggleButton) findViewById(R.id.audio_on_off_button);
     	audioButton.setOnClickListener(this);
     	audioButton.setChecked(audioOn());
+    	ceTargetField = (EditText) findViewById(R.id.target_ce_field);
+    	ecTargetField = (EditText) findViewById(R.id.target_ec_field);
+    	
     	ecDeckSizePicker = (NumberPicker) findViewById(R.id.deck_size_picker);
     	ecDeckSizePicker.setOnClickListener(this);
     	ecDeckSizePicker.setMaxValue(DECK_MAX_SIZE);
@@ -60,6 +71,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	protected void onPause() {
     	super.onPause();
     	Log.d(TAG, "onPause()");
+    	setECTarget();
+    	setCETarget();
     	setECDeckSize(ecDeckSizePicker.getValue());
     	setAudioOnOff(audioButton.isChecked());
     }
@@ -77,6 +90,28 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	   		break;
 	   	}
 	   	
+	}
+	
+	public void setECTarget() {
+		int target = Integer.parseInt(ecTargetField.getText().toString());
+		if (target < TARGET_EC_MIN) {
+			target = TARGET_EC_MIN;
+		}
+		if (target > TARGET_EC_MAX) {
+			target = TARGET_EC_MAX;
+		}
+		setECTarget(target);
+	}
+	
+	public void setCETarget() {
+		int target = Integer.parseInt(ceTargetField.getText().toString());
+		if (target < TARGET_CE_MIN) {
+			target = TARGET_CE_MIN;
+		}
+		if (target > TARGET_CE_MAX) {
+			target = TARGET_CE_MAX;
+		}
+		setCETarget(target);
 	}
 
 	public boolean audioOn() {
@@ -122,5 +157,32 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		editor.putInt(getString(R.string.deck_size_ce_key), size);
 		editor.commit();
 		Log.d(TAG, "Set deck size to: " + size);
+	}
+	
+	private void setCETarget(int target) {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(getString(R.string.target_ec), target);
+		editor.commit();
+		Log.d(TAG, "Set CE target to: " + target);
+		
+	}
+	
+	public int getCETarget() {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ce), DEFAULT_TARGET);
+	}
+	
+	private void setECTarget(int target) {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(getString(R.string.target_ce), target);
+		editor.commit();
+		Log.d(TAG, "Set CE target to: " + target);
+	}
+	
+	public int getECTarget() {
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ec), DEFAULT_TARGET);
 	}
 }
