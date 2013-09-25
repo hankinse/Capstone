@@ -93,7 +93,14 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	}
 	
 	public void setECTarget() {
-		int target = Integer.parseInt(ecTargetField.getText().toString());
+		String targetStr = ecTargetField.getText().toString();
+		int target = 0;
+		try {
+			target = Integer.parseInt(targetStr);
+		}
+		catch (NumberFormatException ex) {
+			target = getECTarget();
+		}
 		if (target < TARGET_EC_MIN) {
 			target = TARGET_EC_MIN;
 		}
@@ -103,8 +110,15 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		setECTarget(target);
 	}
 	
-	public void setCETarget() {
-		int target = Integer.parseInt(ceTargetField.getText().toString());
+	public void setCETarget() {		
+		String targetStr = ceTargetField.getText().toString();
+		int target = 0;
+		try {
+			target = Integer.parseInt(targetStr);
+		}
+		catch (NumberFormatException ex) {
+			target = getCETarget();
+		}
 		if (target < TARGET_CE_MIN) {
 			target = TARGET_CE_MIN;
 		}
