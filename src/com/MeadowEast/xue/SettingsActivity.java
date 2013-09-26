@@ -76,6 +76,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
     	setECTarget();
     	setCETarget();
     	setECDeckSize(ecDeckSizePicker.getValue());
+    	setCEDeckSize(ceDeckSizePicker.getValue());
     	setAudioOnOff(audioButton.isChecked());
     }
     
