@@ -21,6 +21,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewManager;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -44,6 +47,11 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	EditText errorComment;
 	Button advance, okay, undo;
 	static Context context;
+	
+	private Animation anim_out_to_left;
+	private Animation anim_out_to_right;
+	private Animation anim_in_to_left;
+	private Animation anim_in_to_right;
 	
 
 	@Override
@@ -81,6 +89,18 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
     	millis = 0;
     	lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
+		
+		anim_out_to_left = AnimationUtils.loadAnimation(this,
+				R.anim.out_to_left);
+
+		anim_out_to_right = AnimationUtils.loadAnimation(this,
+				R.anim.out_to_right);
+		
+		anim_in_to_left = AnimationUtils.loadAnimation(this,
+				R.anim.in_to_left);
+
+		anim_in_to_right = AnimationUtils.loadAnimation(this,
+				R.anim.in_to_right);
 
 	}
 
@@ -143,26 +163,48 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	}
 
 	private void doOkay() {
-		if (okay.getText().equals("done")) try {
-			lp.log(lp.queueStatus());
-			lp.writeStatus();
-			finish();
-			return;
-			// System.exit(0);
-		} catch (IOException e) {
-			Log.d(TAG, "couldn't write Status");
-			return;
-		}
+		if (okay.getText().equals("done"))
+			try {
+				lp.log(lp.queueStatus());
+				lp.writeStatus();
+				finish();
+				return;
+				// System.exit(0);
+			} catch (IOException e) {
+				Log.d(TAG, "couldn't write Status");
+				return;
+			}
 		// Do nothing unless answer has been seen
-		if (itemsShown < 2) return;
+		if (itemsShown < 2)
+			return;
 		// Got it right
 		lp.right(audioOn());
 		if (lp.next()) {
-			advance.setText("show");
-			clearContent();
-			prompt.setText(lp.prompt());
-			itemsShown = 1;
-			status.setText(lp.deckStatus());
+			prompt.startAnimation(anim_in_to_left);
+			other.startAnimation(anim_in_to_left);
+			answer.startAnimation(anim_in_to_left);
+			
+			anim_in_to_left.setAnimationListener(new AnimationListener() {
+
+				public void onAnimationStart(Animation animation) {
+				}
+
+				public void onAnimationRepeat(Animation animation) {
+				}
+
+				public void onAnimationEnd(Animation animation) {
+					advance.setText("show");
+					clearContent();
+					prompt.setText(lp.prompt());
+					itemsShown = 1;
+					status.setText(lp.deckStatus());
+					prompt.startAnimation(anim_out_to_left);
+					other.startAnimation(anim_out_to_left);
+					answer.startAnimation(anim_out_to_left);
+				}
+			});
+			
+
 		} else {
 			((ViewManager) advance.getParent()).removeView(advance);
 			status.setText("");
@@ -173,10 +215,28 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	
 	public void doUndo() {
 		if (lp.undo()) {
-			clearContent();
-			itemsShown = 1;
-			prompt.setText(lp.prompt());
-			status.setText(lp.deckStatus());
+			prompt.startAnimation(anim_out_to_right);
+			other.startAnimation(anim_out_to_right);
+			answer.startAnimation(anim_out_to_right);
+			anim_out_to_right.setAnimationListener(new AnimationListener() {
+
+				public void onAnimationStart(Animation animation) {
+				}
+
+				public void onAnimationRepeat(Animation animation) {
+				}
+
+				public void onAnimationEnd(Animation animation) {
+					clearContent();
+					itemsShown = 1;
+					prompt.setText(lp.prompt());
+					status.setText(lp.deckStatus());
+					prompt.startAnimation(anim_in_to_right);
+					other.startAnimation(anim_in_to_right);
+					answer.startAnimation(anim_in_to_right);
+				}
+			});
+
 		}
 	}
 
