@@ -85,7 +85,7 @@ public class StatActivity extends Activity {
 	}
 	
 	private void setCEStatus() {
-		ArrayList<String> weekLog = getRelevantEntries(ECName);
+		ArrayList<String> weekLog = getRelevantEntries(CEName);
 		String[] levels = weekLog.get(weekLog.size() - 1).split(" "); // The last line contains the most recent.
 		String first = weekLog.get(0);
 		String last = weekLog.get(weekLog.size() - 1);
