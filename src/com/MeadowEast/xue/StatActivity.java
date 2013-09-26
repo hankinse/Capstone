@@ -15,16 +15,25 @@ import java.util.List;
 import java.util.Map;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
+/*	Usage statistics are calculated as the activity is being loaded.
+ * 	The lastLine member variable contains the last line of the log
+ * 	file, but is currently unused because statistics are being 
+ * 	calculated and displayed in a slightly more user-friendly
+ * 	format. 
+ */
+
 public class StatActivity extends Activity {
 	public static final String TAG = "StatActivity";
 	public static final String CEName = "ChineseEnglish";
 	public static final String ECName = "EnglishChinese";
+	public static final int TIME_HORIZON_DAYS = 7; // The number of days we want to calculate statistics over.
 	
 	public TextView lastDeckDateEC, currentLevelDescEC, weeklyProgressEC;
 	public TextView lastDeckDateCE, currentLevelDescCE, weeklyProgressCE;
@@ -55,14 +64,13 @@ public class StatActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.stat, menu);
 		return true;
 	}
 	
 	private void setECStatus() {
-		ArrayList<String> weekLog = getLastWeek(ECName);
-		String[] levels = weekLog.get(weekLog.size() - 1).split(" ");
+		ArrayList<String> weekLog = getRelevantEntries(ECName);
+		String[] levels = weekLog.get(weekLog.size() - 1).split(" "); // The last line contains the most recent.
 		String first = weekLog.get(0);
 		String last = weekLog.get(weekLog.size() - 1);
 		if (hasLog) {
@@ -77,8 +85,8 @@ public class StatActivity extends Activity {
 	}
 	
 	private void setCEStatus() {
-		ArrayList<String> weekLog = getLastWeek(ECName);
-		String[] levels = weekLog.get(weekLog.size() - 1).split(" ");
+		ArrayList<String> weekLog = getRelevantEntries(ECName);
+		String[] levels = weekLog.get(weekLog.size() - 1).split(" "); // The last line contains the most recent.
 		String first = weekLog.get(0);
 		String last = weekLog.get(weekLog.size() - 1);
 		if (hasLog) {
@@ -98,10 +106,14 @@ public class StatActivity extends Activity {
 		week.setText(getString(R.string.invalid_log));
 	}
 	
-	private ArrayList<String> getLastWeek(String name) {
+	// Returns the last TIME_HORIZON_DAYS worth of entries as an ArrayList of strings
+	// in the following format:
+	// "L0 L1 L2 L3 L4"  where LX is the count of items at level X in that entry.
+	@SuppressLint("SimpleDateFormat")
+	private ArrayList<String> getRelevantEntries(String name) {
 		ArrayList<String> out = new ArrayList<String>();
 		Calendar weekAgoCalendar = Calendar.getInstance();
-		weekAgoCalendar.add(Calendar.DAY_OF_MONTH, -7); // Subtract seven days from right now.
+		weekAgoCalendar.add(Calendar.DAY_OF_MONTH, -TIME_HORIZON_DAYS); // Subtract time_horizon days from right now.
 		Date weekAgo = weekAgoCalendar.getTime();
 		
 		String currentLine = null;
@@ -125,6 +137,7 @@ public class StatActivity extends Activity {
 					lastDate = date;
 					if (weekAgo.before(date)) {
 						// Add the string of level counts to the arrayList.
+						// This is highly tailored to the exact file we're working with.
 						levelCount = new String(tokens.get(0) + " " + tokens.get(1) + " " + 
 												tokens.get(3) + " " + tokens.get(6) + " " + tokens.get(8));
 						out.add(levelCount);
@@ -150,6 +163,10 @@ public class StatActivity extends Activity {
 		return theDate;
 	}
 	
+	/*	Calculates weekly statistics from the oldest entry of the week (start)
+	 *  and the newest entry of the week (end) only.  The numDecks is the number
+	 *  of entries in the log during the given timeframe.
+	 */
 	private String extractWeeklyResults(String start, String end, int numDecks) {
 		String log = null;
 		int[] startLevels = { 0, 0, 0, 0, 0 };
@@ -175,7 +192,7 @@ public class StatActivity extends Activity {
 		String numLearned = null;
 		int learned = endLearned - startLearned;
 		if (learned < 0) {
-			numLearned = new String("forgotten " + learned + " cards, ");
+			numLearned = new String("forgotten " + (-learned) + " cards, ");
 		}
 		else if (learned == 0) {
 			numLearned = new String("not made any progress, ");
