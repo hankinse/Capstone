@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -31,7 +33,7 @@ import android.widget.Toast;
 public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
-	static final int TIMER_UPDATE_INTERVAL = 500;	// In milliseconds.
+	static final int TIMER_UPDATE_INTERVAL = 500; // In milliseconds.
 
 	static Handler timerHandler;
 	long lastTime;
@@ -40,11 +42,12 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	SharedPreferences settings;
 	LearningProject lp;
 	int itemsShown;
-	TextView prompt, answer, other, status, timer;
+	TextView prompt, answer, other, status, timer, promptTemp, answerTemp, otherTemp;
 	EditText errorComment;
 	Button advance, okay, undo;
 	static Context context;
-	
+
+	private Animation anim;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,33 +56,32 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		Log.d(TAG, "Entering onCreate");
 		context = this.getApplicationContext();
 
-        itemsShown = 0;
-        prompt  = (TextView) findViewById(R.id.promptTextView);
-        status  = (TextView) findViewById(R.id.statusTextView);
-        other   = (TextView) findViewById(R.id.otherTextView);
-        answer  = (TextView) findViewById(R.id.answerTextView);
-        advance = (Button) findViewById(R.id.advanceButton);
-        okay    = (Button) findViewById(R.id.okayButton);
-        undo	= (Button) findViewById(R.id.undoButton);
-        timer	= (TextView) findViewById(R.id.timerTextView);
-    	   
-    	findViewById(R.id.advanceButton).setOnClickListener(this);
-    	findViewById(R.id.okayButton).setOnClickListener(this);
-    	findViewById(R.id.undoButton).setOnClickListener(this);
-    	
-    	findViewById(R.id.promptTextView).setOnLongClickListener(this);
-    	findViewById(R.id.answerTextView).setOnLongClickListener(this);
-    	findViewById(R.id.otherTextView).setOnLongClickListener(this);
-    	
-    	if (MainActivity.mode.equals("ec"))
-    		lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
-    	else
-    		lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
-    	clearContent();
-    	doAdvance();
-    	
-    	millis = 0;
-    	lastTime = System.currentTimeMillis();
+		itemsShown = 0;
+		prompt = (TextView) findViewById(R.id.promptTextView);
+		status = (TextView) findViewById(R.id.statusTextView);
+		other = (TextView) findViewById(R.id.otherTextView);
+		answer = (TextView) findViewById(R.id.answerTextView);
+		advance = (Button) findViewById(R.id.advanceButton);
+		okay = (Button) findViewById(R.id.okayButton);
+		undo = (Button) findViewById(R.id.undoButton);
+		timer = (TextView) findViewById(R.id.timerTextView);
+
+		findViewById(R.id.advanceButton).setOnClickListener(this);
+		findViewById(R.id.okayButton).setOnClickListener(this);
+		findViewById(R.id.undoButton).setOnClickListener(this);
+
+		findViewById(R.id.promptTextView).setOnLongClickListener(this);
+		findViewById(R.id.answerTextView).setOnLongClickListener(this);
+		findViewById(R.id.otherTextView).setOnLongClickListener(this);
+
+		if (MainActivity.mode.equals("ec")) lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
+		else
+			lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
+		clearContent();
+		doAdvance();
+
+		millis = 0;
+		lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
 
 	}
@@ -170,9 +172,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			clearContent();
 		}
 	}
-	
+
 	public void doUndo() {
 		if (lp.undo()) {
+			slideCardRight();
 			clearContent();
 			itemsShown = 1;
 			prompt.setText(lp.prompt());
@@ -295,9 +298,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	public void reportError() {
 		LayoutInflater inflater = getLayoutInflater();
 		final View errorReportDialogView = inflater.inflate(R.layout.dialog_report, null);
-		new AlertDialog.Builder(this).setTitle("Error Report")
-		.setView(errorReportDialogView)
-		.setPositiveButton("Report Error", new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(this).setTitle("Error Report").setView(errorReportDialogView).setPositiveButton("Report Error", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 
 				errorComment = (EditText) errorReportDialogView.findViewById(R.id.commentEditText);
@@ -336,6 +337,35 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		} else {
 			return super.onKeyDown(keyCode, event);
 		}
+	}
+
+	public void slideCardLeft() {
+
+		anim = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
+		promptTemp.startAnimation(anim);
+		otherTemp.startAnimation(anim);
+		answerTemp.startAnimation(anim);
+	}
+
+	public void slideCardRight() {
+		promptTemp = new TextView(context);
+		answerTemp = new TextView(context);
+		otherTemp = new TextView(context);
+		
+		promptTemp.setLayoutParams(prompt.getLayoutParams());
+		answerTemp.setLayoutParams(answer.getLayoutParams());
+		otherTemp.setLayoutParams(other.getLayoutParams());
+		
+		
+		promptTemp.setText(prompt.getText());
+		otherTemp.setText(other.getText());
+		answerTemp.setText(answer.getText());
+		
+		anim = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
+		prompt.startAnimation(anim);
+		other.startAnimation(anim);
+		answer.startAnimation(anim);
+
 	}
 
 	public boolean audioOn() {
