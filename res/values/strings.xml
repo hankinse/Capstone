@@ -39,6 +39,8 @@
     <string name="title_activity_stat">StatActivity</string>
     <string name="action_settings">Settings</string>
     <string name="stat_header_text">User Statistics</string>
-    <string name="last_deck_date_text">"Last deck completed: "</string>
+    <string name="last_deck_date_text">"Last correct card at: "</string>
+    <string name="menu_stats">Statistics</string>
+    <string name="invalid_log">Invalid log; cannot display report.</string>
 
 </resources>

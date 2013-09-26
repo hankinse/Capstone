@@ -111,10 +111,15 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent i = null;
         switch (item.getItemId()) {
         case R.id.menu_settings:
-    		Intent i = new Intent(this, SettingsActivity.class);    		
+    		i = new Intent(this, SettingsActivity.class);    		
     		startActivity(i);
+			break;
+		case R.id.menu_stats:
+			i = new Intent(this, StatActivity.class);
+			startActivity(i);
 			break;
         }
         return true;
