@@ -142,6 +142,10 @@ abstract public class LearningProject {
 		if (undoStack.isEmpty()) {
 			return false;
 		}
+		// If the deck is done, I need to increment seen because it wasn't incremented before.  This fixes a bug.
+		if (deck.isEmpty()) {
+			seen++;
+		}
 		// Return the current card to the deck.
 		deck.putFront(cardStatus);
 		// And get the card from the undoStack.
