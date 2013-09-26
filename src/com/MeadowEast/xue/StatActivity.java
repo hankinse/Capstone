@@ -69,10 +69,18 @@ public class StatActivity extends Activity {
 	}
 	
 	private void setECStatus() {
-		ArrayList<String> weekLog = getRelevantEntries(ECName);
-		String[] levels = weekLog.get(weekLog.size() - 1).split(" "); // The last line contains the most recent.
-		String first = weekLog.get(0);
-		String last = weekLog.get(weekLog.size() - 1);
+		ArrayList<String> weekLog = getRelevantEntries(ECName);String[] levels = null;
+		String first = null;
+		String last = null;
+		// Check to make sure there's something there.
+		if (weekLog.size() < 1) {
+			hasLog = false;
+		}
+		else {
+			levels = weekLog.get(weekLog.size() - 1).split(" "); // The last line contains the most recent.
+			first = weekLog.get(0);
+			last = weekLog.get(weekLog.size() - 1);
+		}
 		if (hasLog) {
 			lastDeckDateEC.setText(getString(R.string.last_deck_date_text) + lastDate.toString());
 			currentLevelDescEC.setText("Level counts: L0: " + levels[0] + " L1: " + levels[1] + " L2: " + levels[2] +
@@ -86,9 +94,18 @@ public class StatActivity extends Activity {
 	
 	private void setCEStatus() {
 		ArrayList<String> weekLog = getRelevantEntries(CEName);
-		String[] levels = weekLog.get(weekLog.size() - 1).split(" "); // The last line contains the most recent.
-		String first = weekLog.get(0);
-		String last = weekLog.get(weekLog.size() - 1);
+		String[] levels = null;
+		String first = null;
+		String last = null;
+		// Check to make sure there's something there.
+		if (weekLog.size() < 1) {
+			hasLog = false;
+		}
+		else {
+			levels = weekLog.get(weekLog.size() - 1).split(" "); // The last line contains the most recent.
+			first = weekLog.get(0);
+			last = weekLog.get(weekLog.size() - 1);
+		}
 		if (hasLog) {
 			lastDeckDateCE.setText(getString(R.string.last_deck_date_text) + lastDate.toString());
 			currentLevelDescCE.setText("Level counts: L0: " + levels[0] + " L1: " + levels[1] + " L2: " + levels[2] +
