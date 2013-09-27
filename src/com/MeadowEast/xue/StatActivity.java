@@ -34,6 +34,7 @@ public class StatActivity extends Activity {
 	public static final String CEName = "ChineseEnglish";
 	public static final String ECName = "EnglishChinese";
 	public static final int TIME_HORIZON_DAYS = 7; // The number of days we want to calculate statistics over.
+	public static final int NUM_DECKS_UNTIL_REPORT = 20;
 	
 	public TextView lastDeckDateEC, currentLevelDescEC, weeklyProgressEC;
 	public TextView lastDeckDateCE, currentLevelDescCE, weeklyProgressCE;
@@ -41,6 +42,8 @@ public class StatActivity extends Activity {
 	private boolean hasLog;
 	private String lastLine;
 	private Date lastDate;
+	
+	private int numCompletedDecks;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +54,15 @@ public class StatActivity extends Activity {
 		currentLevelDescEC = (TextView) findViewById(R.id.level_count_text_ec);
 		weeklyProgressEC = (TextView) findViewById(R.id.weekly_progress_text_ec);
 		
+		numCompletedDecks = 0;
 		hasLog = false;
 		setECStatus();
 		
 		lastDeckDateCE = (TextView) findViewById(R.id.last_deck_text_ce);
 		currentLevelDescCE = (TextView) findViewById(R.id.level_count_text_ce);
 		weeklyProgressCE = (TextView) findViewById(R.id.weekly_progress_text_ce);
-		
+
+		numCompletedDecks = 0;
 		hasLog = false;
 		setCEStatus();
 	}
@@ -68,35 +73,12 @@ public class StatActivity extends Activity {
 		return true;
 	}
 	
-	private void setECStatus() {
-		ArrayList<String> weekLog = getRelevantEntries(ECName);String[] levels = null;
-		String first = null;
-		String last = null;
-		// Check to make sure there's something there.
-		if (weekLog.size() < 1) {
-			hasLog = false;
-		}
-		else {
-			levels = weekLog.get(weekLog.size() - 1).split(" "); // The last line contains the most recent.
-			first = weekLog.get(0);
-			last = weekLog.get(weekLog.size() - 1);
-		}
-		if (hasLog) {
-			lastDeckDateEC.setText(getString(R.string.last_deck_date_text) + lastDate.toString());
-			currentLevelDescEC.setText("Level counts: L0: " + levels[0] + " L1: " + levels[1] + " L2: " + levels[2] +
-										" L3: " + levels[3] + " L4: " + levels[4]);
-			weeklyProgressEC.setText(extractWeeklyResults(first, last, weekLog.size()));
-		}
-		else {
-			setTextInvalid(lastDeckDateEC, currentLevelDescEC, weeklyProgressEC);
-		}
-	}
-	
-	private void setCEStatus() {
-		ArrayList<String> weekLog = getRelevantEntries(CEName);
+	private void setStatus(String name, TextView date, TextView level, TextView week) {
+		ArrayList<String> weekLog = getRelevantEntries(name);
 		String[] levels = null;
 		String first = null;
 		String last = null;
+		
 		// Check to make sure there's something there.
 		if (weekLog.size() < 1) {
 			hasLog = false;
@@ -107,14 +89,31 @@ public class StatActivity extends Activity {
 			last = weekLog.get(weekLog.size() - 1);
 		}
 		if (hasLog) {
-			lastDeckDateCE.setText(getString(R.string.last_deck_date_text) + lastDate.toString());
-			currentLevelDescCE.setText("Level counts: L0: " + levels[0] + " L1: " + levels[1] + " L2: " + levels[2] +
+			date.setText(getString(R.string.last_deck_date_text) + lastDate.toString());
+			level.setText("Level counts: L0: " + levels[0] + " L1: " + levels[1] + " L2: " + levels[2] +
 										" L3: " + levels[3] + " L4: " + levels[4]);
-			weeklyProgressCE.setText(extractWeeklyResults(first, last, weekLog.size()));
+			// We want to check to see if it's still too early to extract meaningful weekly results
+			if (numCompletedDecks < NUM_DECKS_UNTIL_REPORT) {
+				String progress = "Here you will see a report of your learning progress after you have completed at least " +
+									NUM_DECKS_UNTIL_REPORT + " decks.  We consider a card learned after it reaches level 2.  " +
+									"You have currently completed " + numCompletedDecks + " decks.";
+				week.setText(progress);
+			}
+			week.setText(extractWeeklyResults(first, last, weekLog.size()));
 		}
 		else {
-			setTextInvalid(lastDeckDateCE, currentLevelDescCE, weeklyProgressEC);
+			setTextInvalid(date, level, week);
 		}
+		
+		
+	}
+	
+	private void setECStatus() {
+		setStatus(ECName, lastDeckDateEC, currentLevelDescEC, weeklyProgressEC);
+	}
+	
+	private void setCEStatus() {
+		setStatus(CEName, lastDeckDateCE, currentLevelDescCE, weeklyProgressCE);
 	}
 	
 	private void setTextInvalid(TextView date, TextView level, TextView week) {
@@ -141,6 +140,7 @@ public class StatActivity extends Activity {
 			File logFileHandle = new File(MainActivity.filesDir, name + ".log.txt");
 			reader = new BufferedReader(new FileReader(logFileHandle));
 			while ((currentLine = reader.readLine()) != null) {
+				++numCompletedDecks;
 				lastLine = currentLine;
 				String[] rawTokens = currentLine.split(" ");
 				Date date = extractDate(rawTokens[0], rawTokens[1]);
