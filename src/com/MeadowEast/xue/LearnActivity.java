@@ -26,6 +26,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
@@ -34,7 +35,7 @@ import android.widget.Toast;
 public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
-	static final int TIMER_UPDATE_INTERVAL = 500;	// In milliseconds.
+	static final int TIMER_UPDATE_INTERVAL = 500; // In milliseconds.
 
 	static Handler timerHandler;
 	long lastTime;
@@ -47,12 +48,11 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	EditText errorComment;
 	Button advance, okay, undo;
 	static Context context;
-	
+
 	private Animation anim_out_to_left;
 	private Animation anim_out_to_right;
 	private Animation anim_in_to_left;
 	private Animation anim_in_to_right;
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,46 +61,63 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		Log.d(TAG, "Entering onCreate");
 		context = this.getApplicationContext();
 
-        itemsShown = 0;
-        prompt  = (TextView) findViewById(R.id.promptTextView);
-        status  = (TextView) findViewById(R.id.statusTextView);
-        other   = (TextView) findViewById(R.id.otherTextView);
-        answer  = (TextView) findViewById(R.id.answerTextView);
-        advance = (Button) findViewById(R.id.advanceButton);
-        okay    = (Button) findViewById(R.id.okayButton);
-        undo	= (Button) findViewById(R.id.undoButton);
-        timer	= (TextView) findViewById(R.id.timerTextView);
-    	   
-    	findViewById(R.id.advanceButton).setOnClickListener(this);
-    	findViewById(R.id.okayButton).setOnClickListener(this);
-    	findViewById(R.id.undoButton).setOnClickListener(this);
-    	
-    	findViewById(R.id.promptTextView).setOnLongClickListener(this);
-    	findViewById(R.id.answerTextView).setOnLongClickListener(this);
-    	findViewById(R.id.otherTextView).setOnLongClickListener(this);
-    	
-    	if (MainActivity.mode.equals("ec"))
-    		lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
-    	else
-    		lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
-    	clearContent();
-    	doAdvance();
-    	
-    	millis = 0;
-    	lastTime = System.currentTimeMillis();
+		itemsShown = 0;
+		prompt = (TextView) findViewById(R.id.promptTextView);
+		status = (TextView) findViewById(R.id.statusTextView);
+		other = (TextView) findViewById(R.id.otherTextView);
+		answer = (TextView) findViewById(R.id.answerTextView);
+		advance = (Button) findViewById(R.id.advanceButton);
+		okay = (Button) findViewById(R.id.okayButton);
+		undo = (Button) findViewById(R.id.undoButton);
+		timer = (TextView) findViewById(R.id.timerTextView);
+
+		findViewById(R.id.advanceButton).setOnClickListener(this);
+		findViewById(R.id.okayButton).setOnClickListener(this);
+		findViewById(R.id.undoButton).setOnClickListener(this);
+
+		findViewById(R.id.promptTextView).setOnLongClickListener(this);
+		findViewById(R.id.answerTextView).setOnLongClickListener(this);
+		findViewById(R.id.otherTextView).setOnLongClickListener(this);
+
+		if (MainActivity.mode.equals("ec")) lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
+		else
+			lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
+		clearContent();
+		doAdvance();
+
+		millis = 0;
+		lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
-		
-		anim_out_to_left = AnimationUtils.loadAnimation(this,
-				R.anim.out_to_left);
 
-		anim_out_to_right = AnimationUtils.loadAnimation(this,
-				R.anim.out_to_right);
-		
-		anim_in_to_left = AnimationUtils.loadAnimation(this,
-				R.anim.in_to_left);
+		anim_out_to_left = AnimationUtils.loadAnimation(this, R.anim.out_to_left);
 
-		anim_in_to_right = AnimationUtils.loadAnimation(this,
-				R.anim.in_to_right);
+		anim_out_to_right = AnimationUtils.loadAnimation(this, R.anim.out_to_right);
+
+		anim_in_to_left = AnimationUtils.loadAnimation(this, R.anim.in_to_left);
+
+		anim_in_to_right = AnimationUtils.loadAnimation(this, R.anim.in_to_right);
+
+		LinearLayout learnLayout = (LinearLayout) findViewById(R.id.LearnLinearLayout);
+		learnLayout.setOnTouchListener(new LearnSwipeTouchListener() {
+			public void onUpSwipe() {
+			}
+
+			public void onDownSwipe() {
+				doAdvance();
+
+			}
+
+			public void onLeftSwipe() {
+				doOkay();
+
+			}
+
+			public void onRightSwipe() {
+				doUndo();
+
+			}
+
+		});
 
 	}
 
@@ -163,27 +180,25 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	}
 
 	private void doOkay() {
-		if (okay.getText().equals("done"))
-			try {
-				lp.log(lp.queueStatus());
-				lp.writeStatus();
-				finish();
-				return;
-				// System.exit(0);
-			} catch (IOException e) {
-				Log.d(TAG, "couldn't write Status");
-				return;
-			}
-		// Do nothing unless answer has been seen
-		if (itemsShown < 2)
+		if (okay.getText().equals("done")) try {
+			lp.log(lp.queueStatus());
+			lp.writeStatus();
+			finish();
 			return;
+			// System.exit(0);
+		} catch (IOException e) {
+			Log.d(TAG, "couldn't write Status");
+			return;
+		}
+		// Do nothing unless answer has been seen
+		if (itemsShown < 2) return;
 		// Got it right
 		lp.right(audioOn());
 		if (lp.next()) {
 			prompt.startAnimation(anim_in_to_left);
 			other.startAnimation(anim_in_to_left);
 			answer.startAnimation(anim_in_to_left);
-			
+
 			anim_in_to_left.setAnimationListener(new AnimationListener() {
 
 				public void onAnimationStart(Animation animation) {
@@ -203,7 +218,6 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 					answer.startAnimation(anim_out_to_left);
 				}
 			});
-			
 
 		} else {
 			((ViewManager) advance.getParent()).removeView(advance);
@@ -212,7 +226,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			clearContent();
 		}
 	}
-	
+
 	public void doUndo() {
 		if (lp.undo()) {
 			prompt.startAnimation(anim_out_to_right);
@@ -353,34 +367,18 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	}
 
 	public void reportError() {
-		LayoutInflater inflater = getLayoutInflater();
-		final View errorReportDialogView = inflater.inflate(R.layout.dialog_report, null);
-		new AlertDialog.Builder(this).setTitle("Error Report")
-		.setView(errorReportDialogView)
-		.setPositiveButton("Report Error", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
+		Intent emailIntent = new Intent(Intent.ACTION_SEND);
+		emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { BUG_EMAIL });
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: " + lp.currentIndex());
+		emailIntent.putExtra(Intent.EXTRA_TEXT, "You are reporting an error on the following card:" + "\n" + "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022" + lp.answer() + "\n" + "\u2022" + lp.other() + "\n" + "\n" + "Comment:" + "\n");
+		emailIntent.setType("message/rfc822");
 
-				errorComment = (EditText) errorReportDialogView.findViewById(R.id.commentEditText);
-				Intent emailIntent = new Intent(Intent.ACTION_SEND);
-				emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { BUG_EMAIL });
-				emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: " + lp.currentIndex());
-				emailIntent.putExtra(Intent.EXTRA_TEXT, "Xue Error Report, ID: " + lp.currentIndex() + "\n" + errorComment.getText().toString());
-				emailIntent.setType("message/rfc822");
+		try {
+			startActivity(Intent.createChooser(emailIntent, "Choose an e-mail client to send error report"));
+		} catch (android.content.ActivityNotFoundException ex) {
 
-				try {
-					startActivity(Intent.createChooser(emailIntent, "Choose an e-mail client to send error report"));
-				} catch (android.content.ActivityNotFoundException ex) {
-
-				}
-			}
-		}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		}).show();
-
-		Toast.makeText(this, "Item index: " + lp.currentIndex(), Toast.LENGTH_LONG).show();
-
+		}
+		lp.currentIndex();
 	}
 
 	@Override

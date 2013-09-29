@@ -1,6 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.MeadowEast.xue.LearnLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
+    android:id="@+id/LearnLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_bg"
@@ -76,7 +76,6 @@
             android:layout_height="wrap_content"
             android:text="Undo"
             android:textSize="18sp" />
-
     </LinearLayout>
 
     <TextView
@@ -87,4 +86,4 @@
         android:gravity="center"
         android:textSize="30sp" />
 
-</LinearLayout>
+</com.MeadowEast.xue.LearnLinearLayout>
