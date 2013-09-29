@@ -1,191 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll" 
+    android:id="@+id/scroll"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-    
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:columnCount="2"
-	    android:orientation="vertical"
-	    android:rowCount="8" >
-	
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:id="@+id/audio_settings_text"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/audio_setting_text"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:textSize="26sp" />
-	
-	        <ToggleButton
-	            android:id="@+id/audio_on_off_button"
-	            android:layout_width="100dp"
-	            android:layout_height="wrap_content"
-	            android:checked="true"
-	            android:textSize="26sp" />
-	    </LinearLayout>
-	
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:id="@+id/English_Chinese_Header2"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/english_chinese_header_text"
-	            android:textAppearance="?android:attr/textAppearanceLarge"
-	            android:textSize="28sp"
-	            android:textStyle="bold" />
-	
-	    </LinearLayout>
-	
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:id="@+id/deck_size_text"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center_vertical"
-	            android:gravity="center_vertical|fill_horizontal"
-	            android:text="@string/deck_size_text"
-	            android:textSize="25sp" />
-	
-	        <NumberPicker
-	            android:id="@+id/deck_size_picker"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content" />
-	
-	    </LinearLayout>
+    android:layout_height="wrap_content"
+    android:background="@color/xueTan"
+    android:padding="20dp" >
 
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/xueTan"
+        android:columnCount="2"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:rowCount="8" >
 
-	        <TextView
-	            android:id="@+id/target_text1"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/target_explain_text"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:textSize="25sp" />
+        <ImageView
+            android:id="@+id/settingsBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/settings" >
+        </ImageView>
 
-	        <EditText
-	            android:id="@+id/target_ec_field"
-	            android:layout_width="0dip"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:ems="10"
-	            android:inputType="number"
-	            android:maxLines="3" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-	            <requestFocus />
-	        </EditText>
+            <TextView
+                android:id="@+id/General_Settings_Header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/general_setting_header_text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-	    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/xueTan" >
 
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical" >
+            <TextView
+                android:id="@+id/audio_settings_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/audio_setting_text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="26sp" />
 
-	        <TextView
-	            android:id="@+id/target_hint1"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:clickable="false"
-	            android:longClickable="false"
-	            android:text="@string/target_hint"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:textSize="20sp" />
+            <ToggleButton
+                android:id="@+id/audio_on_off_button"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_gravity="right"
+                android:background="@drawable/buttonshape"
+                android:checked="true"
+                android:textColor="@color/xueWhite"
+                android:textSize="16sp" />
+        </LinearLayout>
 
-	    </LinearLayout>
-	
-	    <LinearLayout
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical" >
-	
-	        <TextView
-	            android:id="@+id/chinese_english_header2"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/chinese_english_header_text"
-	            android:textAppearance="?android:attr/textAppearanceLarge"
-	            android:textSize="28sp"
-	            android:textStyle="bold" />
-	
-	    </LinearLayout>
-	
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@android:color/darker_gray" />
 
-	        <TextView
-	            android:id="@+id/deck_size_text2"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:gravity="center_vertical|fill_horizontal"
-	            android:text="@string/deck_size_text"
-	            android:textSize="25sp" />
-	
-	        <NumberPicker
-	            android:id="@+id/ce_deck_size_picker"
-	            android:layout_width="0dip"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0.34" />
-	
-	    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
+            <TextView
+                android:id="@+id/English_Chinese_Header2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/english_chinese_header_text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-	        <TextView
-	            android:id="@+id/target_text2"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/target_explain_text"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:textSize="25sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-	        <EditText
-	            android:id="@+id/target_ce_field"
-	            android:layout_width="0dip"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:ems="10"
-	            android:inputType="number"
-	            android:maxLines="3" />
+            <TextView
+                android:id="@+id/deck_size_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical|fill_horizontal"
+                android:text="@string/deck_size_text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="26sp" />
 
-	    </LinearLayout>
+            <EditText
+                android:id="@+id/deck_size_picker"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/buttonshape"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLines="3"
+                android:padding="6dp"
+                android:textSize="18sp"
+                android:textColor="@color/xueWhite"
+                android:textColorHint="#EEEEEE" />
+        </LinearLayout>
 
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-	        <TextView
-	            android:id="@+id/target_hint2"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:clickable="false"
-	            android:ems="10"
-	            android:longClickable="false"
-	            android:text="@string/target_hint"
-	            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/target_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/target_explain_text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="26sp" />
 
-	    </LinearLayout>
+            <EditText
+                android:id="@+id/target_ec_field"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/buttonshape"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLines="3"
+                android:padding="6dp"
+                android:textSize="18sp"
+                android:textColor="@color/xueWhite"
+                android:textColorHint="#EEEEEE" >
 
-	</LinearLayout>
+                <requestFocus />
+            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/target_hint1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:longClickable="false"
+                android:text="@string/target_hint"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/chinese_english_header2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chinese_english_header_text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/deck_size_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical|fill_horizontal"
+                android:text="@string/deck_size_text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="26sp" />
+
+            <EditText
+                android:id="@+id/ce_deck_size_picker"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/buttonshape"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLines="3"
+                android:padding="6dp"
+                android:textSize="18sp"
+                android:textColor="@color/xueWhite"
+                android:textColorHint="#EEEEEE" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/target_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/target_explain_text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="26sp" />
+
+            <EditText
+                android:id="@+id/target_ce_field"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/buttonshape"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLines="3"
+                android:padding="6dp"
+                android:textSize="18sp"
+                android:textColor="@color/xueWhite"
+                android:textColorHint="#EEEEEE" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/target_hint2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:ems="10"
+                android:longClickable="false"
+                android:text="@string/target_hint"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@android:color/darker_gray" />
+    </LinearLayout>
+
 </ScrollView>
-

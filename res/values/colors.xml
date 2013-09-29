@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <color name="xueRed">#DA2C27</color>
+ <color name="xueBlack">#222222</color>
+ <color name="xueTan">#ebe8dd</color>
+ <color name="xueWhite">#ffffff</color>
+
+</resources>

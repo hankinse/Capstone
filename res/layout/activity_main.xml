@@ -1,28 +1,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools" android:id="@+id/LinearLayout1"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:background="#d8d6d6" android:gravity="center"
-	android:orientation="vertical" android:padding="30dp">
+	android:background="@drawable/main_bg" android:orientation="vertical"
+	android:padding="20dp">
 
-	<ImageView android:layout_width="wrap_content" android:id="@+id/imageView1"
-		android:src="@drawable/xue_logo" android:layout_height="wrap_content"
-		android:scaleType="centerInside">
+	<ImageView android:id="@+id/imageView1" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:src="@drawable/xue_logo" android:background="@android:color/transparent"
+		android:layout_margin="8dp">
 	</ImageView>
 
+	<ImageButton android:id="@+id/ecButton"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_gravity="center" android:src="@drawable/button_ec"
+		android:scaleType="fitXY" android:adjustViewBounds="true"
+		android:background="@android:color/transparent" android:layout_margin="8dp" />
 
-	<Button android:id="@+id/ecButton" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_marginBottom="10dp"
-		android:alpha=".80" android:background="@drawable/buttonshape" android:padding="20dp"
-		android:text="@string/ecButtonLabel" android:textSize="35sp" />
+	<ImageButton android:id="@+id/ceButton"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_gravity="center" android:src="@drawable/button_ce"
+		android:scaleType="fitXY" android:adjustViewBounds="true"
+		android:background="@android:color/transparent" android:layout_margin="8dp" />
 
-	<Button android:id="@+id/ceButton" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_marginBottom="10dp"
-		android:alpha=".80" android:background="@drawable/buttonshape" android:padding="20dp"
-		android:text="@string/ceButtonLabel" android:textSize="35sp" />
-
-	<Button android:id="@+id/exitButton" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:alpha=".80"
-		android:background="@drawable/buttonshape" android:padding="20dp" android:text="@string/exitButtonLabel"
-		android:textSize="35sp" />
+	<ImageButton android:id="@+id/exitButton" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_gravity="center"
+		android:src="@drawable/button_exit" android:scaleType="fitXY"
+		android:adjustViewBounds="true" android:background="@android:color/transparent"
+		android:layout_margin="8dp" />
 
 </LinearLayout>

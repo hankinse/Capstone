@@ -14,13 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import com.MeadowEast.xue.Updater;
 import android.content.SharedPreferences;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button ecButton, ceButton, exitButton;
+	ImageButton ecButton, ceButton, exitButton;
 	public static String packageName;
 	public static File filesDir;
 	public static String mode;
@@ -37,9 +38,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		packageName = getApplicationContext().getPackageName();
 		// button setup
-		ecButton = (Button) findViewById(R.id.ecButton);
-		ceButton = (Button) findViewById(R.id.ceButton);
-		exitButton = (Button) findViewById(R.id.exitButton);
+		ecButton = (ImageButton) findViewById(R.id.ecButton);
+		ceButton = (ImageButton) findViewById(R.id.ceButton);
+		exitButton = (ImageButton) findViewById(R.id.exitButton);
 		ecButton.setOnClickListener(this);
 		ceButton.setOnClickListener(this);
 		exitButton.setOnClickListener(this);
