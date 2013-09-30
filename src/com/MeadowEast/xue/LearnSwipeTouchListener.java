@@ -17,13 +17,14 @@ public class LearnSwipeTouchListener implements OnTouchListener {
 	private final class GestureListener extends SimpleOnGestureListener {
 
 		private static final int DISTANCE_THRESHOLD = 100;
-		private static final int VELOCITY_THRESHOLD = 100;
+		private static final int VELOCITY_THRESHOLD = 180;
 
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 			try {
 				float deltaX = e2.getX() - e1.getX();
 				float deltaY = e2.getY() - e1.getY();
+				
 
 				if (Math.abs(deltaX) > Math.abs(deltaY)) {
 					if (Math.abs(deltaX) > DISTANCE_THRESHOLD && Math.abs(velocityX) > VELOCITY_THRESHOLD) {

@@ -20,8 +20,8 @@
     <string name="shared_settings_key">SHARED_SETTINGS_KEY</string>
     <string name="file_version_id">file_version</string>
     <string name="general_setting_header_text">General Settings</string>
-    <string name="audio_setting_text">Audio Feedback:</string>
-    <string name="deck_size_text">Deck Size:</string>
+    <string name="audio_setting_text">Audio Feedback:\u0020</string>
+    <string name="deck_size_text">Deck Size:\u0020</string>
     <string name="audio_state_on_off">audio_on_off</string>
     <string name="deck_size_ec_key">deck_size_ec_key</string>
     <string name="deck_size_ce_key">deck_size_ce_key</string>
@@ -32,7 +32,7 @@
     <string name="audio_header">Audio</string>
     <string name="english_chinese_header_text">English-Chinese Settings</string>
     <string name="chinese_english_header_text">Chinese-English Settings</string>
-    <string name="target_explain_text">Max Learning Set:</string>
+    <string name="target_explain_text">Max Learning Set:\u0020</string>
     <string name="target_text">Max Learning Set</string>
     <string name="target_hint">This sets the maximum size of the pool of cards you are currently learning.  The default is 700.</string>
     <string name="target_ec">target_ec</string>
