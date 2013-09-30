@@ -2,22 +2,16 @@ package com.MeadowEast.xue;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.ObjectInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
@@ -40,7 +34,6 @@ public class StatActivity extends Activity {
 	public TextView lastDeckDateCE, currentLevelDescCE, weeklyProgressCE;
 	
 	private boolean hasLog;
-	private String lastLine;
 	private Date lastDate;
 	
 	private int numCompletedDecks;
