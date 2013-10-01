@@ -34,6 +34,7 @@ public class StatActivity extends Activity {
 	public TextView lastDeckDateCE, currentLevelDescCE, weeklyProgressCE;
 	
 	private boolean hasLog;
+	private String lastLine;
 	private Date lastDate;
 	
 	private int numCompletedDecks;
