@@ -93,7 +93,7 @@
 
             <TextView
                 android:id="@+id/weekly_progress_text_ec"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/weekly_progress_ec_title"
                 android:layout_toRightOf="@+id/level_count_text_ec_title"
@@ -171,7 +171,7 @@
 
             <TextView
                 android:id="@+id/weekly_progress_text_ce"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/weekly_progress_ce_title"
                 android:layout_toRightOf="@+id/level_count_text_ce_title"
