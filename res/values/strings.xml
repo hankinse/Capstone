@@ -40,8 +40,12 @@
     <string name="title_activity_stat">StatActivity</string>
     <string name="action_settings">Settings</string>
     <string name="stat_header_text">User Statistics</string>
-    <string name="last_deck_date_text">"Last deck completed: "</string>
+    <string name="last_deck_date_text_title">Last Deck Completed:</string>
+    <string name="level_counts_title">Level Counts:</string>
+    <string name="weekly_progress_title">Weekly Progress:</string>
     <string name="menu_stats">Statistics</string>
     <string name="invalid_log">Invalid log; cannot display report.</string>
+    <string name="english_chinese_statistics_text">English - Chinese Statistics</string>
+    <string name="chinese_english_statistics_text">Chinese - English Statistics</string>
 
 </resources>

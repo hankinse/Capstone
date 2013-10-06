@@ -83,9 +83,9 @@ public class StatActivity extends Activity {
 			last = weekLog.get(weekLog.size() - 1);
 		}
 		if (hasLog) {
-			date.setText(getString(R.string.last_deck_date_text) + lastDate.toString());
-			level.setText("Level counts: L0: " + levels[0] + " L1: " + levels[1] + " L2: " + levels[2] +
-										" L3: " + levels[3] + " L4: " + levels[4]);
+			date.setText(lastDate.toString());
+			level.setText("Level 0: " + levels[0] + "\n" + "Level 1: " + levels[1] + "\n" + "Level 2: " + levels[2] + "\n"+
+										"Level 3: " + levels[3] + "\n" + "Level 4: " + levels[4]);
 			// We want to check to see if it's still too early to extract meaningful weekly results
 			if (numCompletedDecks < NUM_DECKS_UNTIL_REPORT) {
 				String progress = "Here you will see a report of your learning progress after you have completed at least " +
