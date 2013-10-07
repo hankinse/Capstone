@@ -219,10 +219,19 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 
 		} else {
 			((ViewManager) advance.getParent()).removeView(advance);
-			status.setText("");
+			status.setText(getLevelStats());
 			okay.setText("done");
 			clearContent();
 		}
+	}
+	
+	private String getLevelStats() {
+		String stats = "";
+		
+		for (int i = 0; i < 5; ++i) {
+			stats = stats + "Level " + i + ": " + lp.getNumAtLevel(i) + "\n";
+		}
+		return stats;
 	}
 
 	public void doUndo() {

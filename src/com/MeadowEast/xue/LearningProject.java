@@ -182,6 +182,13 @@ abstract public class LearningProject {
 				n[0], n[1], n[2], n[1]+n[2], n[3], n[4], n[3]+n[4], n[0]+n[1]+n[2]+n[3]+n[4]);
 	}
 	
+	public int getNumAtLevel(int level) {
+		if (level < 5 && level > 0)
+			return indexSets.get(level).size();
+		else
+			return 0;
+	}
+	
 	public void log(String s) throws IOException {
 		Log.d(TAG, "Entering log okay");
 		boolean append = true;
