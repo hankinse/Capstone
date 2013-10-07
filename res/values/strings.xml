@@ -44,7 +44,7 @@
     <string name="level_counts_title">Level Counts:</string>
     <string name="weekly_progress_title">Weekly Progress:</string>
     <string name="menu_stats">Statistics</string>
-    <string name="invalid_log">Invalid log; cannot display report.</string>
+    <string name="invalid_log">Invalid Log</string>
     <string name="english_chinese_statistics_text">English - Chinese Statistics</string>
     <string name="chinese_english_statistics_text">Chinese - English Statistics</string>
 

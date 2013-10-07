@@ -73,7 +73,7 @@
 
             <TextView
                 android:id="@+id/level_count_text_ec"
-                android:layout_width="wrap_content"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/level_count_text_ec_title"
                 android:background="@drawable/text_bg"
@@ -151,7 +151,7 @@
 
             <TextView
                 android:id="@+id/level_count_text_ce"
-                android:layout_width="wrap_content"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/level_count_text_ce_title"
                 android:background="@drawable/text_bg"
