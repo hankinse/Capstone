@@ -34,7 +34,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings_menu);
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		// Set up components.
 		audioButton = (ToggleButton) findViewById(R.id.audio_on_off_button);
 		audioButton.setOnClickListener(this);
@@ -46,10 +47,13 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 		ecDeckSizePicker = (EditText) findViewById(R.id.deck_size_picker);
 		ceDeckSizePicker = (EditText) findViewById(R.id.ce_deck_size_picker);
-		ecDeckSizePicker.setHint("Deck size currently " + getCEDeckSize() + " cards.");
-		ceDeckSizePicker.setHint("Deck size currently " + getECDeckSize() + " cards.");
+		ecDeckSizePicker.setHint("Deck size currently " + getCEDeckSize()
+				+ " cards.");
+		ceDeckSizePicker.setHint("Deck size currently " + getECDeckSize()
+				+ " cards.");
 		File sdCard = Environment.getExternalStorageDirectory();
-		filesDir = new File(sdCard.getAbsolutePath() + "/Android/data/com.MeadowEast.xue/files");
+		filesDir = new File(sdCard.getAbsolutePath()
+				+ "/Android/data/com.MeadowEast.xue/files");
 		Log.d(TAG, "xxx filesDir=" + filesDir);
 	}
 
@@ -156,14 +160,17 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	}
 
 	public boolean audioOn() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		boolean isOn = settings.getBoolean(getString(R.string.audio_state_on_off), true);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		boolean isOn = settings.getBoolean(
+				getString(R.string.audio_state_on_off), true);
 		Log.d(TAG, "Audio feedback is currently: " + isOn);
 		return isOn;
 	}
 
 	public void setAudioOnOff(boolean isOn) {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(getString(R.string.audio_state_on_off), isOn);
 		editor.commit();
@@ -171,14 +178,17 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	}
 
 	public int getECDeckSize() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		int size = settings.getInt(getString(R.string.deck_size_ec_key), DEFAULT_EC_DECK_SIZE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		int size = settings.getInt(getString(R.string.deck_size_ec_key),
+				DEFAULT_EC_DECK_SIZE);
 		Log.d(TAG, "Current deck size: " + size);
 		return size;
 	}
 
 	public void setECDeckSize(int size) {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt(getString(R.string.deck_size_ec_key), size);
 		editor.commit();
@@ -186,14 +196,17 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	}
 
 	public int getCEDeckSize() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		int size = settings.getInt(getString(R.string.deck_size_ce_key), DEFAULT_CE_DECK_SIZE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		int size = settings.getInt(getString(R.string.deck_size_ce_key),
+				DEFAULT_CE_DECK_SIZE);
 		Log.d(TAG, "Current deck size: " + size);
 		return size;
 	}
 
 	public void setCEDeckSize(int size) {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt(getString(R.string.deck_size_ce_key), size);
 		editor.commit();
@@ -201,7 +214,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	}
 
 	private void setCETarget(int target) {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt(getString(R.string.target_ce), target);
 		editor.commit();
@@ -210,12 +224,14 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	}
 
 	public int getCETarget() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		return settings.getInt(getString(R.string.target_ce), DEFAULT_TARGET);
 	}
 
 	private void setECTarget(int target) {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt(getString(R.string.target_ec), target);
 		editor.commit();
@@ -223,7 +239,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	}
 
 	public int getECTarget() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		return settings.getInt(getString(R.string.target_ec), DEFAULT_TARGET);
 	}
 }

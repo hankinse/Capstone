@@ -6,8 +6,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 public class Sound {
-	public static MediaPlayer right = MediaPlayer.create(LearnActivity.context, R.raw.right);
-	public static MediaPlayer wrong = MediaPlayer.create(LearnActivity.context, R.raw.wrong);
+	public static MediaPlayer right = MediaPlayer.create(LearnActivity.context,
+			R.raw.right);
+	public static MediaPlayer wrong = MediaPlayer.create(LearnActivity.context,
+			R.raw.wrong);
 
 	public static void playURL(String soundURL) {
 		MediaPlayer mp = new MediaPlayer();

@@ -16,13 +16,12 @@ public class Updater {
 	public static boolean vocabFileExists;
 	public static String vocabURL = "http://www.meadoweast.com/capstone/vocabUTF8.txt";
 	static final String TAG = "XUE Updater";
-	
 
 	public void checkVocabFileExists(File filesDir) {
 		File vocabFile = new File(filesDir + "/vocabUTF8.txt");
-		
+
 		Log.d(TAG, "Checking if vocabulary file exists.");
-		//Check whether the vocab file exists at given directory.
+		// Check whether the vocab file exists at given directory.
 		if (!vocabFile.exists()) {
 			Log.d(TAG, "Vocabulary file does not exist.");
 			vocabFileExists = false;
@@ -33,13 +32,14 @@ public class Updater {
 
 	}
 
-	/// Returns the 'date' field of the file header from the website or "ERROR"
+	// / Returns the 'date' field of the file header from the website or "ERROR"
 	public String getCurrentVersion() {
-		String header = "ERROR";	
+		String header = "ERROR";
 		try {
 			// Open an http connection and get the "date" field of the header.
 			URL url = new URL(vocabURL);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
 			header = connection.getHeaderField("Last-Modified");
 			Log.d(TAG, "Header date found: " + header);
 		}
@@ -53,11 +53,12 @@ public class Updater {
 		} catch (IOException e) {
 			Log.d(TAG, "IO Exception");
 		}
-		
+
 		return header;
 	}
-	
-	// We only download the vocab file if we already know the local version is not
+
+	// We only download the vocab file if we already know the local version is
+	// not
 	// the current version.
 	public void downloadVocab(File filesDir) {
 		File vocabFile = new File(filesDir + "/vocabUTF8.txt");
@@ -67,8 +68,9 @@ public class Updater {
 			// URL of remote vocabulary file
 			URL url = new URL(vocabURL);
 
-			//  Open http connection to get the vocab file.
-			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+			// Open http connection to get the vocab file.
+			HttpURLConnection httpConnection = (HttpURLConnection) url
+					.openConnection();
 			Log.d(TAG, "Opening connection to download vocab file.");
 			httpConnection.setRequestMethod("GET");
 			httpConnection.connect();
@@ -94,7 +96,8 @@ public class Updater {
 
 				// Increment the amount that is downloaded
 				downloaded += bufferSize;
-				Log.d(TAG, "" + downloaded + "/" + fileSize + " bytes downloaded.");
+				Log.d(TAG, "" + downloaded + "/" + fileSize
+						+ " bytes downloaded.");
 			}
 
 			fos.flush();

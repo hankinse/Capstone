@@ -34,7 +34,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
 		packageName = getApplicationContext().getPackageName();
 		// button setup
 		ecButton = (ImageButton) findViewById(R.id.ecButton);
@@ -44,15 +45,17 @@ public class MainActivity extends Activity implements OnClickListener {
 		ceButton.setOnClickListener(this);
 		exitButton.setOnClickListener(this);
 		File sdCard = Environment.getExternalStorageDirectory();
-		filesDir = new File(sdCard.getAbsolutePath() + "/Android/data/com.MeadowEast.xue/files");
+		filesDir = new File(sdCard.getAbsolutePath()
+				+ "/Android/data/com.MeadowEast.xue/files");
 		Log.d(TAG, "xxx filesDir=" + filesDir);
 
 		Log.d(TAG, "Checking for vocab file.");
-		
-		// DEBUG: Set update date to yesterday to force an update.  Comment forceUpdateDate() out to do real checking.
+
+		// DEBUG: Set update date to yesterday to force an update. Comment
+		// forceUpdateDate() out to do real checking.
 		// call forceUpdateDate() to forcibly trigger the time to update.
 		// forceUpdateDate(settings);
-		
+
 		handleUpdate();
 	}
 
@@ -69,29 +72,37 @@ public class MainActivity extends Activity implements OnClickListener {
 			i = new Intent(this, LearnActivity.class);
 			startActivity(i);
 			break;
-    	case R.id.exitButton:
-    		finish();
+		case R.id.exitButton:
+			finish();
 			break;
 		}
 	}
 
 	private void handleUpdate() {
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+
 		if (timeToUpdate(settings)) {
 			new Thread() {
 				public void run() {
 					Updater updater = new Updater();
 					String current = updater.getCurrentVersion();
 					Log.d(TAG, "Current file version: " + current);
-					if (current == null || current.equals("ERROR")) {				// Make sure we got the header correctly.
+					if (current == null || current.equals("ERROR")) { // Make
+																		// sure
+																		// we
+																		// got
+																		// the
+																		// header
+																		// correctly.
 						Log.d(TAG, "Could not update vocab file.");
-					}
-					else {
-						if (isCorrectVersion(current, settings)) {	// If we're up to date, exit.
+					} else {
+						if (isCorrectVersion(current, settings)) { // If we're
+																	// up to
+																	// date,
+																	// exit.
 							Log.d(TAG, "Local vocab file is current.");
-						}
-						else {
+						} else {
 							// If not, download and replace the new file.
 							Log.d(TAG, "Need to update vocab file.");
 							updater.downloadVocab(filesDir);
@@ -100,7 +111,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					}
 					setNextUpdateTime(settings);
 				}
-			}.start(); 
+			}.start();
 		}
 	}
 
@@ -109,81 +120,87 @@ public class MainActivity extends Activity implements OnClickListener {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = null;
-        switch (item.getItemId()) {
-        case R.id.menu_settings:
-    		i = new Intent(this, SettingsActivity.class);    		
-    		startActivity(i);
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			i = new Intent(this, SettingsActivity.class);
+			startActivity(i);
 			break;
 		case R.id.menu_stats:
 			i = new Intent(this, StatActivity.class);
 			startActivity(i);
 			break;
-        }
-        return true;
-    }
+		}
+		return true;
+	}
 
 	public void displayMessage(final String msg) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
+						.show();
 			}
 		});
-	}	
-	
+	}
+
 	private void writeFileVersion(String version, SharedPreferences settings) {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(getString(R.string.file_version_id), version);
 		editor.commit();
 	}
-	
+
 	private boolean isCorrectVersion(String version, SharedPreferences settings) {
-		String local = settings.getString(getString(R.string.file_version_id), "");
+		String local = settings.getString(getString(R.string.file_version_id),
+				"");
 		Log.d(TAG, "Local version:" + local);
 		if (local.equals(version)) {
 			return true;
-		}		
-		else
+		} else
 			return false;
 	}
-	
+
 	private boolean timeToUpdate(SharedPreferences settings) {
 		Calendar now = Calendar.getInstance();
-		
-		// Get the next update time.  If there hasn't been an update yet, say
+
+		// Get the next update time. If there hasn't been an update yet, say
 		// the next update was a year ago so we definitely want to update.
 		int updateYear = settings.getInt("next_update_year", 2012);
 		int updateMonth = settings.getInt("next_update_month", 1);
 		int updateDay = settings.getInt("next_update_day", 1);
-		Log.d(TAG, "updateYear: " + updateYear + " updateMonth: " + updateMonth + " updateDay: " + updateDay);
+		Log.d(TAG, "updateYear: " + updateYear + " updateMonth: " + updateMonth
+				+ " updateDay: " + updateDay);
 		Calendar toUpdate = Calendar.getInstance();
-		toUpdate.set(updateYear,  updateMonth, updateDay);
-		
+		toUpdate.set(updateYear, updateMonth, updateDay);
+
 		// If the current time is after the next update time, we want to update.
 		return now.after(toUpdate);
 	}
-	
+
 	private void setNextUpdateTime(SharedPreferences settings) {
 		Calendar now = Calendar.getInstance();
-		now.add(Calendar.DAY_OF_MONTH, UPDATE_INTERVAL_DAYS);		// We want to check again in one week.
+		now.add(Calendar.DAY_OF_MONTH, UPDATE_INTERVAL_DAYS); // We want to
+																// check again
+																// in one week.
 		int year = now.get(Calendar.YEAR);
 		int month = now.get(Calendar.MONTH);
 		int day = now.get(Calendar.DAY_OF_MONTH);
-		Log.d(TAG, "Next update on: " + year + " , " + month + " , " + day + ".");
-		
+		Log.d(TAG, "Next update on: " + year + " , " + month + " , " + day
+				+ ".");
+
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt("next_update_year", year);
 		editor.putInt("next_update_month", month);
 		editor.putInt("next_update_day", day);
 		editor.commit();
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void forceUpdateDate(SharedPreferences settings) {
 		Calendar now = Calendar.getInstance();
-		now.add(Calendar.DAY_OF_MONTH, -1);	// We want to check again in one week.
+		now.add(Calendar.DAY_OF_MONTH, -1); // We want to check again in one
+											// week.
 		int day = now.get(Calendar.DAY_OF_MONTH);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt("next_update_day", day);

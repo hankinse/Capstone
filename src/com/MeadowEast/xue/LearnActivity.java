@@ -16,10 +16,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewManager;
+import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -30,7 +32,8 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
-public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
+public class LearnActivity extends Activity implements OnClickListener,
+		OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
 	static final int TIMER_UPDATE_INTERVAL = 500; // In milliseconds.
@@ -51,6 +54,8 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	private Animation anim_out_to_right;
 	private Animation anim_in_to_left;
 	private Animation anim_in_to_right;
+
+	LinearLayout learnLayout;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +82,8 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		findViewById(R.id.answerTextView).setOnLongClickListener(this);
 		findViewById(R.id.otherTextView).setOnLongClickListener(this);
 
-		if (MainActivity.mode.equals("ec")) lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
+		if (MainActivity.mode.equals("ec"))
+			lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
 		else
 			lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
 		clearContent();
@@ -87,36 +93,31 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
 
-		anim_out_to_left = AnimationUtils.loadAnimation(this, R.anim.out_to_left);
+		anim_out_to_left = AnimationUtils.loadAnimation(this,
+				R.anim.out_to_left);
 
-		anim_out_to_right = AnimationUtils.loadAnimation(this, R.anim.out_to_right);
+		anim_out_to_right = AnimationUtils.loadAnimation(this,
+				R.anim.out_to_right);
 
 		anim_in_to_left = AnimationUtils.loadAnimation(this, R.anim.in_to_left);
 
-		anim_in_to_right = AnimationUtils.loadAnimation(this, R.anim.in_to_right);
+		anim_in_to_right = AnimationUtils.loadAnimation(this,
+				R.anim.in_to_right);
 
-		LinearLayout learnLayout = (LinearLayout) findViewById(R.id.LearnLinearLayout);
+		learnLayout = (LearnLinearLayout) findViewById(R.id.LearnLinearLayout);
 		learnLayout.setOnTouchListener(new LearnSwipeTouchListener() {
-			public void onUpSwipe() {
-			}
-
 			public void onDownSwipe() {
 				doAdvance();
-
 			}
 
 			public void onLeftSwipe() {
 				doOkay();
-
 			}
 
 			public void onRightSwipe() {
 				doUndo();
-
 			}
-
 		});
-
 	}
 
 	@Override
@@ -178,18 +179,20 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	}
 
 	private void doOkay() {
-		if (okay.getText().equals("done")) try {
-			lp.log(lp.queueStatus());
-			lp.writeStatus();
-			finish();
-			return;
-			// System.exit(0);
-		} catch (IOException e) {
-			Log.d(TAG, "couldn't write Status");
-			return;
-		}
+		if (okay.getText().equals("done"))
+			try {
+				lp.log(lp.queueStatus());
+				lp.writeStatus();
+				finish();
+				return;
+				// System.exit(0);
+			} catch (IOException e) {
+				Log.d(TAG, "couldn't write Status");
+				return;
+			}
 		// Do nothing unless answer has been seen
-		if (itemsShown < 2) return;
+		if (itemsShown < 2)
+			return;
 		// Got it right
 		lp.right(audioOn());
 		if (lp.next()) {
@@ -224,10 +227,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			clearContent();
 		}
 	}
-	
+
 	private String getLevelStats() {
 		String stats = "";
-		
+
 		for (int i = 0; i < 5; ++i) {
 			stats = stats + "Level " + i + ": " + lp.getNumAtLevel(i) + "\n";
 		}
@@ -327,7 +330,9 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			int minutes = seconds / 60;
 			int hours = minutes / 60;
 
-			if (hours > 0) timer.setText(String.format("%d:%02d:%02d", hours, minutes % 60, seconds % 60));
+			if (hours > 0)
+				timer.setText(String.format("%d:%02d:%02d", hours,
+						minutes % 60, seconds % 60));
 
 			else
 				timer.setText(String.format("%d:%02d", minutes, seconds % 60));
@@ -342,7 +347,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		int end = text.getSelectionEnd();
 		if (end - start > 0) {
 			str = str.substring(start, end);
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb=" + str));
+			Intent browserIntent = new Intent(
+					Intent.ACTION_VIEW,
+					Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb="
+							+ str));
 			startActivity(browserIntent);
 		} else {
 			CreatePopupMenu(text);
@@ -373,12 +381,19 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	public void reportError() {
 		Intent emailIntent = new Intent(Intent.ACTION_SEND);
 		emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { BUG_EMAIL });
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: " + lp.currentIndex());
-		emailIntent.putExtra(Intent.EXTRA_TEXT, "You are reporting an error on the following card:" + "\n" + "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022" + lp.answer() + "\n" + "\u2022" + lp.other() + "\n" + "\n" + "Comment:" + "\n");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: "
+				+ lp.currentIndex());
+		emailIntent.putExtra(
+				Intent.EXTRA_TEXT,
+				"You are reporting an error on the following card:" + "\n"
+						+ "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022"
+						+ lp.answer() + "\n" + "\u2022" + lp.other() + "\n"
+						+ "\n" + "Comment:" + "\n");
 		emailIntent.setType("message/rfc822");
 
 		try {
-			startActivity(Intent.createChooser(emailIntent, "Choose an e-mail client to send error report"));
+			startActivity(Intent.createChooser(emailIntent,
+					"Choose an e-mail client to send error report"));
 		} catch (android.content.ActivityNotFoundException ex) {
 
 		}
@@ -389,11 +404,17 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Log.d(TAG, "llkj");
-			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.quit).setMessage(R.string.reallyQuit).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					LearnActivity.this.finish();
-				}
-			}).setNegativeButton(R.string.no, null).show();
+			new AlertDialog.Builder(this)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.quit)
+					.setMessage(R.string.reallyQuit)
+					.setPositiveButton(R.string.yes,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									LearnActivity.this.finish();
+								}
+							}).setNegativeButton(R.string.no, null).show();
 			return true;
 		} else {
 			return super.onKeyDown(keyCode, event);
@@ -401,27 +422,38 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	}
 
 	public boolean audioOn() {
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings
+				.getBoolean(getString(R.string.audio_state_on_off), true);
 	}
 
 	public int getECDeckSize() {
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_ec_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ec_key),
+				SettingsActivity.DEFAULT_EC_DECK_SIZE);
 	}
 
 	public int getCEDeckSize() {
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_ce_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ce_key),
+				SettingsActivity.DEFAULT_EC_DECK_SIZE);
 	}
 
 	public int getECTarget() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.target_ec), SettingsActivity.DEFAULT_TARGET);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ec),
+				SettingsActivity.DEFAULT_TARGET);
 	}
 
 	public int getCETarget() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.target_ce), SettingsActivity.DEFAULT_TARGET);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ce),
+				SettingsActivity.DEFAULT_TARGET);
 	}
+
 }
