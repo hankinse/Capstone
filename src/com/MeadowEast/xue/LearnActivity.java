@@ -32,8 +32,8 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
-public class LearnActivity extends Activity implements OnClickListener,
-		OnLongClickListener, OnMenuItemClickListener {
+public class LearnActivity extends Activity implements OnLongClickListener,
+		OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
 	static final int TIMER_UPDATE_INTERVAL = 500; // In milliseconds.
@@ -73,10 +73,6 @@ public class LearnActivity extends Activity implements OnClickListener,
 		okay = (Button) findViewById(R.id.okayButton);
 		undo = (Button) findViewById(R.id.undoButton);
 		timer = (TextView) findViewById(R.id.timerTextView);
-
-		findViewById(R.id.advanceButton).setOnClickListener(this);
-		findViewById(R.id.okayButton).setOnClickListener(this);
-		findViewById(R.id.undoButton).setOnClickListener(this);
 
 		findViewById(R.id.promptTextView).setOnLongClickListener(this);
 		findViewById(R.id.answerTextView).setOnLongClickListener(this);
@@ -261,26 +257,6 @@ public class LearnActivity extends Activity implements OnClickListener,
 				}
 			});
 
-		}
-	}
-
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.advanceButton:
-			doAdvance();
-			break;
-		case R.id.okayButton:
-			doOkay();
-			break;
-		case R.id.undoButton:
-			doUndo();
-			break;
-		// case R.id.promptTextView:
-		// case R.id.answerTextView:
-		// case R.id.otherTextView:
-		// Toast.makeText(this, "Item index: "+lp.currentIndex(),
-		// Toast.LENGTH_LONG).show();
-		// break;
 		}
 	}
 

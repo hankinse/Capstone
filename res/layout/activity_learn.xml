@@ -60,17 +60,18 @@
 
     <LinearLayout
         android:id="@+id/controlLayout"
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/advanceButton"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@drawable/buttonshape"
+            android:background="@android:color/transparent"
             android:text="@string/show"
+            android:textColor="@android:color/transparent"
             android:textSize="20sp" />
 
         <Button
@@ -78,8 +79,9 @@
             android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@drawable/buttonshape"
+            android:background="@android:color/transparent"
             android:text="@string/undo"
+            android:textColor="@android:color/transparent"
             android:textSize="20sp" />
 
         <Button
@@ -87,8 +89,9 @@
             android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@drawable/buttonshape"
+            android:background="@android:color/transparent"
             android:text="@string/okay"
+            android:textColor="@android:color/transparent"
             android:textSize="20sp" />
     </LinearLayout>
 
