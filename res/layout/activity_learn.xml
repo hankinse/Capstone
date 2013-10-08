@@ -67,24 +67,30 @@
 
         <Button
             android:id="@+id/advanceButton"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/buttonshape"
             android:text="@string/show"
-            android:textSize="40sp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/okayButton"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/buttonshape"
             android:text="@string/okay"
-            android:textSize="40sp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/undoButton"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:text="Undo"
-            android:textSize="18sp" />
+            android:layout_margin="10dp"
+            android:background="@drawable/buttonshape"
+            android:text="@string/undo"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <TextView

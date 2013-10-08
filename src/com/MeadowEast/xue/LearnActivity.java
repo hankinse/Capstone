@@ -359,9 +359,6 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 
 	public boolean onMenuItemClick(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.textToSpeech:
-			TextToSpeech.englishToSpeech(lp.prompt());
-			break;
 		case R.id.report:
 			reportError();
 			break;

@@ -10,6 +10,7 @@
     <string name="exitButtonLabel">Exit</string>
     <string name="show">show</string>
     <string name="okay">okay</string>
+    <string name="undo">undo</string>
     <string name="title_CEActivity">Chinese-English Trainer</string>
     <string name="quit">Confirm quit</string>
     <string name="reallyQuit">Quit and lose all progress on current deck?</string>
