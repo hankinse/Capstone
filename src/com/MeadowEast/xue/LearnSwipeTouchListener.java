@@ -11,7 +11,8 @@ public class LearnSwipeTouchListener implements OnTouchListener {
 	private final GestureDetector gestureDetector = new GestureDetector(LearnActivity.context, new GestureListener());
 
 	public boolean onTouch(final View view, final MotionEvent motionEvent) {
-		return gestureDetector.onTouchEvent(motionEvent);
+		gestureDetector.onTouchEvent(motionEvent);
+		return true;
 	}
 
 	private final class GestureListener extends SimpleOnGestureListener {
