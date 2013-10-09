@@ -121,8 +121,8 @@ public class StatActivity extends Activity {
 
 	private void setTextInvalid(TextView date, TextView level, TextView week) {
 		date.setText(getString(R.string.invalid_log));
-		level.setText(getString(R.string.invalid_log));
-		week.setText(getString(R.string.invalid_log));
+		level.setText(getString(R.string.na));
+		week.setText(getString(R.string.no_progress));
 	}
 
 	// Returns the last TIME_HORIZON_DAYS worth of entries as an ArrayList of
