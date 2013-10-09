@@ -48,5 +48,6 @@
     <string name="invalid_log">Invalid Log</string>
     <string name="english_chinese_statistics_text">English - Chinese Statistics</string>
     <string name="chinese_english_statistics_text">Chinese - English Statistics</string>
+    <string name="level_hint">The level represents your familiarity with a card.  A level 0 card is a never-before-seen card, while a level 4 card is a card you are most familiar with.  Get cards correct as they first appear in a deck in order to increase your level of familarity.  If your familiarity with a card reaches level 2, then it is considered learned. </string>
 
 </resources>

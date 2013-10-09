@@ -181,11 +181,22 @@
                 android:textSize="18sp" />
 
             <View
+                android:id="@+id/divider2"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/level_count_text_ce"
                 android:layout_margin="5dp"
                 android:background="@android:color/darker_gray" />
+            
+              <TextView
+                android:id="@+id/level_hint_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider2"
+                android:padding="6dp"
+                android:text="@string/level_hint"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="14sp" />
         </RelativeLayout>
     </ScrollView>
 

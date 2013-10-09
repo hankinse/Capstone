@@ -16,12 +16,10 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.ViewManager;
-import android.view.ViewParent;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -32,8 +30,7 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
-public class LearnActivity extends Activity implements OnClickListener,
-		OnLongClickListener, OnMenuItemClickListener {
+public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
 	static final int TIMER_UPDATE_INTERVAL = 500; // In milliseconds.
@@ -46,9 +43,11 @@ public class LearnActivity extends Activity implements OnClickListener,
 	LearningProject lp;
 	int itemsShown;
 	TextView prompt, answer, other, status, timer;
+	Button doneButton;
 	EditText errorComment;
-	Button advance, okay, undo;
 	static Context context;
+
+	boolean isDone = false;
 
 	private Animation anim_out_to_left;
 	private Animation anim_out_to_right;
@@ -69,21 +68,13 @@ public class LearnActivity extends Activity implements OnClickListener,
 		status = (TextView) findViewById(R.id.statusTextView);
 		other = (TextView) findViewById(R.id.otherTextView);
 		answer = (TextView) findViewById(R.id.answerTextView);
-		advance = (Button) findViewById(R.id.advanceButton);
-		okay = (Button) findViewById(R.id.okayButton);
-		undo = (Button) findViewById(R.id.undoButton);
 		timer = (TextView) findViewById(R.id.timerTextView);
-
-		findViewById(R.id.advanceButton).setOnClickListener(this);
-		findViewById(R.id.okayButton).setOnClickListener(this);
-		findViewById(R.id.undoButton).setOnClickListener(this);
 
 		findViewById(R.id.promptTextView).setOnLongClickListener(this);
 		findViewById(R.id.answerTextView).setOnLongClickListener(this);
 		findViewById(R.id.otherTextView).setOnLongClickListener(this);
 
-		if (MainActivity.mode.equals("ec"))
-			lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
+		if (MainActivity.mode.equals("ec")) lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
 		else
 			lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
 		clearContent();
@@ -93,16 +84,13 @@ public class LearnActivity extends Activity implements OnClickListener,
 		lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
 
-		anim_out_to_left = AnimationUtils.loadAnimation(this,
-				R.anim.out_to_left);
+		anim_out_to_left = AnimationUtils.loadAnimation(this, R.anim.out_to_left);
 
-		anim_out_to_right = AnimationUtils.loadAnimation(this,
-				R.anim.out_to_right);
+		anim_out_to_right = AnimationUtils.loadAnimation(this, R.anim.out_to_right);
 
 		anim_in_to_left = AnimationUtils.loadAnimation(this, R.anim.in_to_left);
 
-		anim_in_to_right = AnimationUtils.loadAnimation(this,
-				R.anim.in_to_right);
+		anim_in_to_right = AnimationUtils.loadAnimation(this, R.anim.in_to_right);
 
 		learnLayout = (LearnLinearLayout) findViewById(R.id.LearnLinearLayout);
 		learnLayout.setOnTouchListener(new LearnSwipeTouchListener() {
@@ -142,6 +130,9 @@ public class LearnActivity extends Activity implements OnClickListener,
 	}
 
 	private void doAdvance() {
+		if (isDone) {
+			return;
+		}
 		if (itemsShown == 0) {
 			if (lp.next()) {
 				prompt.setText(lp.prompt());
@@ -158,11 +149,9 @@ public class LearnActivity extends Activity implements OnClickListener,
 		} else if (itemsShown == 2) {
 			Log.d(TAG, lp.other());
 			other.setText(lp.other());
-			advance.setText("next");
 			itemsShown++;
 		} else if (itemsShown == 3) {
 			// Got it wrong
-			advance.setText("show");
 			lp.wrong(audioOn());
 			lp.next();
 			clearContent();
@@ -178,21 +167,26 @@ public class LearnActivity extends Activity implements OnClickListener,
 		other.setText("");
 	}
 
-	private void doOkay() {
-		if (okay.getText().equals("done"))
-			try {
-				lp.log(lp.queueStatus());
-				lp.writeStatus();
-				finish();
-				return;
-				// System.exit(0);
-			} catch (IOException e) {
-				Log.d(TAG, "couldn't write Status");
-				return;
-			}
-		// Do nothing unless answer has been seen
-		if (itemsShown < 2)
+	private void doDone() {
+		try {
+			lp.log(lp.queueStatus());
+			lp.writeStatus();
+			finish();
 			return;
+			// System.exit(0);
+		} catch (IOException e) {
+			Log.d(TAG, "couldn't write Status");
+			return;
+		}
+
+	}
+
+	private void doOkay() {
+		if (isDone) {
+			return;
+		}
+		// Do nothing unless answer has been seen
+		if (itemsShown < 2) return;
 		// Got it right
 		lp.right(audioOn());
 		if (lp.next()) {
@@ -209,7 +203,6 @@ public class LearnActivity extends Activity implements OnClickListener,
 				}
 
 				public void onAnimationEnd(Animation animation) {
-					advance.setText("show");
 					clearContent();
 					prompt.setText(lp.prompt());
 					itemsShown = 1;
@@ -221,9 +214,16 @@ public class LearnActivity extends Activity implements OnClickListener,
 			});
 
 		} else {
-			((ViewManager) advance.getParent()).removeView(advance);
+			isDone = true;
+			Button doneButton = new Button(this);
+			doneButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			doneButton.setText("Done");
+			doneButton.setBackgroundResource(R.drawable.buttonshape);
+			doneButton.setId(50);
+			doneButton.setOnClickListener((OnClickListener) this);
+
+			learnLayout.addView(doneButton);
 			status.setText(getLevelStats());
-			okay.setText("done");
 			clearContent();
 		}
 	}
@@ -239,6 +239,7 @@ public class LearnActivity extends Activity implements OnClickListener,
 
 	public void doUndo() {
 		if (lp.undo()) {
+			isDone = false;
 			prompt.startAnimation(anim_out_to_right);
 			other.startAnimation(anim_out_to_right);
 			answer.startAnimation(anim_out_to_right);
@@ -266,21 +267,9 @@ public class LearnActivity extends Activity implements OnClickListener,
 
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.advanceButton:
-			doAdvance();
+		case 50:
+			doDone();
 			break;
-		case R.id.okayButton:
-			doOkay();
-			break;
-		case R.id.undoButton:
-			doUndo();
-			break;
-		// case R.id.promptTextView:
-		// case R.id.answerTextView:
-		// case R.id.otherTextView:
-		// Toast.makeText(this, "Item index: "+lp.currentIndex(),
-		// Toast.LENGTH_LONG).show();
-		// break;
 		}
 	}
 
@@ -330,9 +319,7 @@ public class LearnActivity extends Activity implements OnClickListener,
 			int minutes = seconds / 60;
 			int hours = minutes / 60;
 
-			if (hours > 0)
-				timer.setText(String.format("%d:%02d:%02d", hours,
-						minutes % 60, seconds % 60));
+			if (hours > 0) timer.setText(String.format("%d:%02d:%02d", hours, minutes % 60, seconds % 60));
 
 			else
 				timer.setText(String.format("%d:%02d", minutes, seconds % 60));
@@ -347,10 +334,7 @@ public class LearnActivity extends Activity implements OnClickListener,
 		int end = text.getSelectionEnd();
 		if (end - start > 0) {
 			str = str.substring(start, end);
-			Intent browserIntent = new Intent(
-					Intent.ACTION_VIEW,
-					Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb="
-							+ str));
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb=" + str));
 			startActivity(browserIntent);
 		} else {
 			CreatePopupMenu(text);
@@ -381,19 +365,12 @@ public class LearnActivity extends Activity implements OnClickListener,
 	public void reportError() {
 		Intent emailIntent = new Intent(Intent.ACTION_SEND);
 		emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { BUG_EMAIL });
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: "
-				+ lp.currentIndex());
-		emailIntent.putExtra(
-				Intent.EXTRA_TEXT,
-				"You are reporting an error on the following card:" + "\n"
-						+ "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022"
-						+ lp.answer() + "\n" + "\u2022" + lp.other() + "\n"
-						+ "\n" + "Comment:" + "\n");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: " + lp.currentIndex());
+		emailIntent.putExtra(Intent.EXTRA_TEXT, "You are reporting an error on the following card:" + "\n" + "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022" + lp.answer() + "\n" + "\u2022" + lp.other() + "\n" + "\n" + "Comment:" + "\n");
 		emailIntent.setType("message/rfc822");
 
 		try {
-			startActivity(Intent.createChooser(emailIntent,
-					"Choose an e-mail client to send error report"));
+			startActivity(Intent.createChooser(emailIntent, "Choose an e-mail client to send error report"));
 		} catch (android.content.ActivityNotFoundException ex) {
 
 		}
@@ -404,17 +381,11 @@ public class LearnActivity extends Activity implements OnClickListener,
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Log.d(TAG, "llkj");
-			new AlertDialog.Builder(this)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(R.string.quit)
-					.setMessage(R.string.reallyQuit)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									LearnActivity.this.finish();
-								}
-							}).setNegativeButton(R.string.no, null).show();
+			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.quit).setMessage(R.string.reallyQuit).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					LearnActivity.this.finish();
+				}
+			}).setNegativeButton(R.string.no, null).show();
 			return true;
 		} else {
 			return super.onKeyDown(keyCode, event);
@@ -422,38 +393,28 @@ public class LearnActivity extends Activity implements OnClickListener,
 	}
 
 	public boolean audioOn() {
-		settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings
-				.getBoolean(getString(R.string.audio_state_on_off), true);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
 	}
 
 	public int getECDeckSize() {
-		settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_ec_key),
-				SettingsActivity.DEFAULT_EC_DECK_SIZE);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ec_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);
 	}
 
 	public int getCEDeckSize() {
-		settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_ce_key),
-				SettingsActivity.DEFAULT_EC_DECK_SIZE);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ce_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);
 	}
 
 	public int getECTarget() {
-		SharedPreferences settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.target_ec),
-				SettingsActivity.DEFAULT_TARGET);
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ec), SettingsActivity.DEFAULT_TARGET);
 	}
 
 	public int getCETarget() {
-		SharedPreferences settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.target_ce),
-				SettingsActivity.DEFAULT_TARGET);
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ce), SettingsActivity.DEFAULT_TARGET);
 	}
 
 }

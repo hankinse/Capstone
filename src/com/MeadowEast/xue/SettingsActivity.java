@@ -47,9 +47,9 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 		ecDeckSizePicker = (EditText) findViewById(R.id.deck_size_picker);
 		ceDeckSizePicker = (EditText) findViewById(R.id.ce_deck_size_picker);
-		ecDeckSizePicker.setHint("Deck size currently " + getCEDeckSize()
+		ecDeckSizePicker.setHint("Deck size currently " + getECDeckSize()
 				+ " cards.");
-		ceDeckSizePicker.setHint("Deck size currently " + getECDeckSize()
+		ceDeckSizePicker.setHint("Deck size currently " + getCEDeckSize()
 				+ " cards.");
 		File sdCard = Environment.getExternalStorageDirectory();
 		filesDir = new File(sdCard.getAbsolutePath()
