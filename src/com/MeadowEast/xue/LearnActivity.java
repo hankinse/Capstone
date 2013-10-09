@@ -30,7 +30,8 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
-public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
+public class LearnActivity extends Activity implements OnClickListener,
+		OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
 	static final int TIMER_UPDATE_INTERVAL = 500; // In milliseconds.
@@ -53,6 +54,8 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	private Animation anim_out_to_right;
 	private Animation anim_in_to_left;
 	private Animation anim_in_to_right;
+	private Animation anim_in_to_up;
+	private Animation anim_out_to_up;
 
 	LinearLayout learnLayout;
 
@@ -74,7 +77,8 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		findViewById(R.id.answerTextView).setOnLongClickListener(this);
 		findViewById(R.id.otherTextView).setOnLongClickListener(this);
 
-		if (MainActivity.mode.equals("ec")) lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
+		if (MainActivity.mode.equals("ec"))
+			lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
 		else
 			lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
 		clearContent();
@@ -84,13 +88,20 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
 
-		anim_out_to_left = AnimationUtils.loadAnimation(this, R.anim.out_to_left);
+		anim_out_to_left = AnimationUtils.loadAnimation(this,
+				R.anim.out_to_left);
 
-		anim_out_to_right = AnimationUtils.loadAnimation(this, R.anim.out_to_right);
+		anim_out_to_right = AnimationUtils.loadAnimation(this,
+				R.anim.out_to_right);
 
 		anim_in_to_left = AnimationUtils.loadAnimation(this, R.anim.in_to_left);
 
-		anim_in_to_right = AnimationUtils.loadAnimation(this, R.anim.in_to_right);
+		anim_in_to_right = AnimationUtils.loadAnimation(this,
+				R.anim.in_to_right);
+
+		anim_in_to_up = AnimationUtils.loadAnimation(this, R.anim.in_to_up);
+
+		anim_out_to_up = AnimationUtils.loadAnimation(this, R.anim.out_to_up);
 
 		learnLayout = (LearnLinearLayout) findViewById(R.id.LearnLinearLayout);
 		learnLayout.setOnTouchListener(new LearnSwipeTouchListener() {
@@ -98,8 +109,16 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 				doAdvance();
 			}
 
-			public void onLeftSwipe() {
+			public void onUpSwipe() {
 				doOkay();
+			}
+
+			public void onLeftSwipe() {
+				if (isDone) {
+					return;
+				}
+				doMarkWrong();
+
 			}
 
 			public void onRightSwipe() {
@@ -129,6 +148,38 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		return true;
 	}
 
+	private void doMarkWrong() {
+
+		if (itemsShown > 1) {
+			prompt.startAnimation(anim_in_to_left);
+			other.startAnimation(anim_in_to_left);
+			answer.startAnimation(anim_in_to_left);
+
+			anim_in_to_left.setAnimationListener(new AnimationListener() {
+
+				public void onAnimationStart(Animation animation) {
+				}
+
+				public void onAnimationRepeat(Animation animation) {
+				}
+
+				public void onAnimationEnd(Animation animation) {
+					// Got it wrong
+					lp.wrong(audioOn());
+					lp.next();
+					clearContent();
+					prompt.setText(lp.prompt());
+					itemsShown = 1;
+					status.setText(lp.deckStatus());
+					prompt.startAnimation(anim_out_to_left);
+					other.startAnimation(anim_out_to_left);
+					answer.startAnimation(anim_out_to_left);
+				}
+			});
+
+		}
+	}
+
 	private void doAdvance() {
 		if (isDone) {
 			return;
@@ -150,14 +201,6 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			Log.d(TAG, lp.other());
 			other.setText(lp.other());
 			itemsShown++;
-		} else if (itemsShown == 3) {
-			// Got it wrong
-			lp.wrong(audioOn());
-			lp.next();
-			clearContent();
-			prompt.setText(lp.prompt());
-			itemsShown = 1;
-			status.setText(lp.deckStatus());
 		}
 	}
 
@@ -186,15 +229,16 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			return;
 		}
 		// Do nothing unless answer has been seen
-		if (itemsShown < 2) return;
+		if (itemsShown < 2)
+			return;
 		// Got it right
 		lp.right(audioOn());
 		if (lp.next()) {
-			prompt.startAnimation(anim_in_to_left);
-			other.startAnimation(anim_in_to_left);
-			answer.startAnimation(anim_in_to_left);
+			prompt.startAnimation(anim_in_to_up);
+			other.startAnimation(anim_in_to_up);
+			answer.startAnimation(anim_in_to_up);
 
-			anim_in_to_left.setAnimationListener(new AnimationListener() {
+			anim_in_to_up.setAnimationListener(new AnimationListener() {
 
 				public void onAnimationStart(Animation animation) {
 				}
@@ -207,16 +251,17 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 					prompt.setText(lp.prompt());
 					itemsShown = 1;
 					status.setText(lp.deckStatus());
-					prompt.startAnimation(anim_out_to_left);
-					other.startAnimation(anim_out_to_left);
-					answer.startAnimation(anim_out_to_left);
+					prompt.startAnimation(anim_out_to_up);
+					other.startAnimation(anim_out_to_up);
+					answer.startAnimation(anim_out_to_up);
 				}
 			});
 
 		} else {
 			isDone = true;
 			Button doneButton = new Button(this);
-			doneButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			doneButton.setLayoutParams(new LayoutParams(
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			doneButton.setText("Done");
 			doneButton.setBackgroundResource(R.drawable.buttonshape);
 			doneButton.setId(50);
@@ -319,7 +364,9 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 			int minutes = seconds / 60;
 			int hours = minutes / 60;
 
-			if (hours > 0) timer.setText(String.format("%d:%02d:%02d", hours, minutes % 60, seconds % 60));
+			if (hours > 0)
+				timer.setText(String.format("%d:%02d:%02d", hours,
+						minutes % 60, seconds % 60));
 
 			else
 				timer.setText(String.format("%d:%02d", minutes, seconds % 60));
@@ -334,7 +381,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 		int end = text.getSelectionEnd();
 		if (end - start > 0) {
 			str = str.substring(start, end);
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb=" + str));
+			Intent browserIntent = new Intent(
+					Intent.ACTION_VIEW,
+					Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb="
+							+ str));
 			startActivity(browserIntent);
 		} else {
 			CreatePopupMenu(text);
@@ -365,12 +415,19 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	public void reportError() {
 		Intent emailIntent = new Intent(Intent.ACTION_SEND);
 		emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { BUG_EMAIL });
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: " + lp.currentIndex());
-		emailIntent.putExtra(Intent.EXTRA_TEXT, "You are reporting an error on the following card:" + "\n" + "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022" + lp.answer() + "\n" + "\u2022" + lp.other() + "\n" + "\n" + "Comment:" + "\n");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: "
+				+ lp.currentIndex());
+		emailIntent.putExtra(
+				Intent.EXTRA_TEXT,
+				"You are reporting an error on the following card:" + "\n"
+						+ "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022"
+						+ lp.answer() + "\n" + "\u2022" + lp.other() + "\n"
+						+ "\n" + "Comment:" + "\n");
 		emailIntent.setType("message/rfc822");
 
 		try {
-			startActivity(Intent.createChooser(emailIntent, "Choose an e-mail client to send error report"));
+			startActivity(Intent.createChooser(emailIntent,
+					"Choose an e-mail client to send error report"));
 		} catch (android.content.ActivityNotFoundException ex) {
 
 		}
@@ -381,11 +438,17 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Log.d(TAG, "llkj");
-			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.quit).setMessage(R.string.reallyQuit).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					LearnActivity.this.finish();
-				}
-			}).setNegativeButton(R.string.no, null).show();
+			new AlertDialog.Builder(this)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.quit)
+					.setMessage(R.string.reallyQuit)
+					.setPositiveButton(R.string.yes,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									LearnActivity.this.finish();
+								}
+							}).setNegativeButton(R.string.no, null).show();
 			return true;
 		} else {
 			return super.onKeyDown(keyCode, event);
@@ -393,28 +456,38 @@ public class LearnActivity extends Activity implements OnClickListener, OnLongCl
 	}
 
 	public boolean audioOn() {
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings
+				.getBoolean(getString(R.string.audio_state_on_off), true);
 	}
 
 	public int getECDeckSize() {
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_ec_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ec_key),
+				SettingsActivity.DEFAULT_EC_DECK_SIZE);
 	}
 
 	public int getCEDeckSize() {
-		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_ce_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);
+		settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ce_key),
+				SettingsActivity.DEFAULT_CE_DECK_SIZE);
 	}
 
 	public int getECTarget() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.target_ec), SettingsActivity.DEFAULT_TARGET);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ec),
+				SettingsActivity.DEFAULT_TARGET);
 	}
 
 	public int getCETarget() {
-		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.target_ce), SettingsActivity.DEFAULT_TARGET);
+		SharedPreferences settings = getSharedPreferences(
+				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ce),
+				SettingsActivity.DEFAULT_TARGET);
 	}
 
 }
