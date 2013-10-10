@@ -1,5 +1,6 @@
 package com.MeadowEast.xue;
 
+import java.awt.Color;
 import java.io.IOException;
 
 import android.app.Activity;
@@ -12,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,8 +33,7 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 
-public class LearnActivity extends Activity implements OnClickListener,
-		OnLongClickListener, OnMenuItemClickListener {
+public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener, OnMenuItemClickListener {
 	static final String TAG = "LearnActivity";
 	static final String BUG_EMAIL = "brokenspicerack@gmail.com";
 	static final int TIMER_UPDATE_INTERVAL = 500; // In milliseconds.
@@ -46,6 +48,11 @@ public class LearnActivity extends Activity implements OnClickListener,
 	TextView prompt, answer, other, status, timer;
 	Button doneButton;
 	EditText errorComment;
+
+	int start_level0, start_level1, start_level2, start_level3, start_level4;
+	int end_level0, end_level1, end_level2, end_level3, end_level4;
+	String diff_level0, diff_level1, diff_level2, diff_level3, diff_level4;
+
 	static Context context;
 
 	boolean isDone = false;
@@ -77,8 +84,7 @@ public class LearnActivity extends Activity implements OnClickListener,
 		findViewById(R.id.answerTextView).setOnLongClickListener(this);
 		findViewById(R.id.otherTextView).setOnLongClickListener(this);
 
-		if (MainActivity.mode.equals("ec"))
-			lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
+		if (MainActivity.mode.equals("ec")) lp = new EnglishChineseProject(getECDeckSize(), getECTarget());
 		else
 			lp = new ChineseEnglishProject(getCEDeckSize(), getECTarget());
 		clearContent();
@@ -88,16 +94,25 @@ public class LearnActivity extends Activity implements OnClickListener,
 		lastTime = System.currentTimeMillis();
 		timerHandler = new Handler();
 
-		anim_out_to_left = AnimationUtils.loadAnimation(this,
-				R.anim.out_to_left);
+		start_level0 = lp.getNumAtLevel(0);
+		start_level1 = lp.getNumAtLevel(1);
+		start_level2 = lp.getNumAtLevel(2);
+		start_level3 = lp.getNumAtLevel(3);
+		start_level4 = lp.getNumAtLevel(4);
+		Log.d(TAG, "start_level0 " + start_level0);
+		Log.d(TAG, "start_level1 " + start_level1);
+		Log.d(TAG, "start_level2 " + start_level2);
+		Log.d(TAG, "start_level3 " + start_level3);
+		Log.d(TAG, "start_level4 " + start_level4);
+		
 
-		anim_out_to_right = AnimationUtils.loadAnimation(this,
-				R.anim.out_to_right);
+		anim_out_to_left = AnimationUtils.loadAnimation(this, R.anim.out_to_left);
+
+		anim_out_to_right = AnimationUtils.loadAnimation(this, R.anim.out_to_right);
 
 		anim_in_to_left = AnimationUtils.loadAnimation(this, R.anim.in_to_left);
 
-		anim_in_to_right = AnimationUtils.loadAnimation(this,
-				R.anim.in_to_right);
+		anim_in_to_right = AnimationUtils.loadAnimation(this, R.anim.in_to_right);
 
 		anim_in_to_up = AnimationUtils.loadAnimation(this, R.anim.in_to_up);
 
@@ -229,8 +244,7 @@ public class LearnActivity extends Activity implements OnClickListener,
 			return;
 		}
 		// Do nothing unless answer has been seen
-		if (itemsShown < 2)
-			return;
+		if (itemsShown < 2) return;
 		// Got it right
 		lp.right(audioOn());
 		if (lp.next()) {
@@ -260,16 +274,61 @@ public class LearnActivity extends Activity implements OnClickListener,
 		} else {
 			isDone = true;
 			Button doneButton = new Button(this);
-			doneButton.setLayoutParams(new LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			doneButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			doneButton.setText("Done");
+			doneButton.setTextColor(getResources().getColor(R.color.xueWhite));
+			doneButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40);
 			doneButton.setBackgroundResource(R.drawable.buttonshape);
 			doneButton.setId(50);
 			doneButton.setOnClickListener((OnClickListener) this);
 
+			prompt.setBackgroundResource(R.drawable.text_bg);
+			prompt.setGravity(Gravity.CENTER);
+			prompt.setPadding(6, 6, 6, 6);
+
 			learnLayout.addView(doneButton);
-			status.setText(getLevelStats());
-			clearContent();
+
+			end_level0 = lp.getNumAtLevel(0);
+			end_level1 = lp.getNumAtLevel(1);
+			end_level2 = lp.getNumAtLevel(2);
+			end_level3 = lp.getNumAtLevel(3);
+			end_level4 = lp.getNumAtLevel(4);
+
+			if ((end_level2 - start_level2) > 0) answer.setText("Congratulations! You learned " + (end_level2 - start_level2) + " cards.");
+
+			else if ((end_level3 - start_level3) > 0 && (end_level3 - start_level3) > 0) answer.setText("Congratulations! You haven't learned any new cards, but you have become more familiar with cards you have already learned.");
+			else
+				answer.setText("Sorry. You didn't make much progress this time.");
+			
+			Log.d(TAG, "" + end_level0 + "-" + start_level0 + "=" + (end_level0 - start_level0));
+			Log.d(TAG, "" + end_level1 + "-" + start_level1 + "=" + (end_level1 - start_level1));
+			Log.d(TAG, "" + end_level2 + "-" + start_level2 + "=" + (end_level2 - start_level2));
+			Log.d(TAG, "" + end_level3 + "-" + start_level3 + "=" + (end_level3 - start_level3));
+			Log.d(TAG, "" + end_level4 + "-" + start_level4 + "=" + (end_level4 - start_level4));
+			
+			
+
+			if ((end_level0 - start_level0) > -1) diff_level0 = "+" + (end_level0 - start_level0);
+			else
+				diff_level0 = String.valueOf(end_level0 - start_level0);
+			if ((end_level1 - start_level1) > -1) diff_level1 = "+" + (end_level1 - start_level1);
+			else
+				diff_level1 = String.valueOf(end_level1 - start_level1);
+			if ((end_level2 - start_level2) > -1) diff_level2 = "+" + (end_level2 - start_level2);
+			else
+				diff_level2 = String.valueOf(end_level2 - start_level2);
+			if ((end_level3 - start_level3) > -1) diff_level3 = "+" + (end_level3 - start_level3);
+			else
+				diff_level3 =  String.valueOf(end_level3 - start_level3);
+			if ((end_level4 - start_level4) > -1) diff_level4 = "+" + (end_level4 - start_level4);
+			else
+				diff_level4 = String.valueOf(end_level4 - start_level4);
+
+			prompt.setText("Level 0: " + end_level0 + " (" + diff_level0 + ")" + "\n" + "Level 1: " + end_level1 + " (" + diff_level1 + ")" + "\n" + "Level 2: " + end_level2 + " (" + diff_level2 + ")" + "\n" + "Level 3: " + end_level3 + " (" + diff_level3 + ")" + "\n" + "Level 4: " + end_level4 + " (" + diff_level4 + ")");
+
+			other.setText("");
+			status.setText("");
+
 		}
 	}
 
@@ -364,9 +423,7 @@ public class LearnActivity extends Activity implements OnClickListener,
 			int minutes = seconds / 60;
 			int hours = minutes / 60;
 
-			if (hours > 0)
-				timer.setText(String.format("%d:%02d:%02d", hours,
-						minutes % 60, seconds % 60));
+			if (hours > 0) timer.setText(String.format("%d:%02d:%02d", hours, minutes % 60, seconds % 60));
 
 			else
 				timer.setText(String.format("%d:%02d", minutes, seconds % 60));
@@ -381,10 +438,7 @@ public class LearnActivity extends Activity implements OnClickListener,
 		int end = text.getSelectionEnd();
 		if (end - start > 0) {
 			str = str.substring(start, end);
-			Intent browserIntent = new Intent(
-					Intent.ACTION_VIEW,
-					Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb="
-							+ str));
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb=" + str));
 			startActivity(browserIntent);
 		} else {
 			CreatePopupMenu(text);
@@ -415,19 +469,12 @@ public class LearnActivity extends Activity implements OnClickListener,
 	public void reportError() {
 		Intent emailIntent = new Intent(Intent.ACTION_SEND);
 		emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { BUG_EMAIL });
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: "
-				+ lp.currentIndex());
-		emailIntent.putExtra(
-				Intent.EXTRA_TEXT,
-				"You are reporting an error on the following card:" + "\n"
-						+ "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022"
-						+ lp.answer() + "\n" + "\u2022" + lp.other() + "\n"
-						+ "\n" + "Comment:" + "\n");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Xue Error Report, ID: " + lp.currentIndex());
+		emailIntent.putExtra(Intent.EXTRA_TEXT, "You are reporting an error on the following card:" + "\n" + "\n" + "\u2022" + lp.prompt() + "\n" + "\u2022" + lp.answer() + "\n" + "\u2022" + lp.other() + "\n" + "\n" + "Comment:" + "\n");
 		emailIntent.setType("message/rfc822");
 
 		try {
-			startActivity(Intent.createChooser(emailIntent,
-					"Choose an e-mail client to send error report"));
+			startActivity(Intent.createChooser(emailIntent, "Choose an e-mail client to send error report"));
 		} catch (android.content.ActivityNotFoundException ex) {
 
 		}
@@ -438,17 +485,11 @@ public class LearnActivity extends Activity implements OnClickListener,
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Log.d(TAG, "llkj");
-			new AlertDialog.Builder(this)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(R.string.quit)
-					.setMessage(R.string.reallyQuit)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									LearnActivity.this.finish();
-								}
-							}).setNegativeButton(R.string.no, null).show();
+			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.quit).setMessage(R.string.reallyQuit).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					LearnActivity.this.finish();
+				}
+			}).setNegativeButton(R.string.no, null).show();
 			return true;
 		} else {
 			return super.onKeyDown(keyCode, event);
@@ -456,38 +497,28 @@ public class LearnActivity extends Activity implements OnClickListener,
 	}
 
 	public boolean audioOn() {
-		settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings
-				.getBoolean(getString(R.string.audio_state_on_off), true);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getBoolean(getString(R.string.audio_state_on_off), true);
 	}
 
 	public int getECDeckSize() {
-		settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_ec_key),
-				SettingsActivity.DEFAULT_EC_DECK_SIZE);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ec_key), SettingsActivity.DEFAULT_EC_DECK_SIZE);
 	}
 
 	public int getCEDeckSize() {
-		settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.deck_size_ce_key),
-				SettingsActivity.DEFAULT_CE_DECK_SIZE);
+		settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.deck_size_ce_key), SettingsActivity.DEFAULT_CE_DECK_SIZE);
 	}
 
 	public int getECTarget() {
-		SharedPreferences settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.target_ec),
-				SettingsActivity.DEFAULT_TARGET);
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ec), SettingsActivity.DEFAULT_TARGET);
 	}
 
 	public int getCETarget() {
-		SharedPreferences settings = getSharedPreferences(
-				getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
-		return settings.getInt(getString(R.string.target_ce),
-				SettingsActivity.DEFAULT_TARGET);
+		SharedPreferences settings = getSharedPreferences(getString(R.string.shared_settings_key), Context.MODE_PRIVATE);
+		return settings.getInt(getString(R.string.target_ce), SettingsActivity.DEFAULT_TARGET);
 	}
 
 }

@@ -203,7 +203,7 @@ abstract public class LearningProject {
 	}
 
 	public int getNumAtLevel(int level) {
-		if (level < 5 && level > 0)
+		if (level < 5 && level > -1)
 			return indexSets.get(level).size();
 		else
 			return 0;

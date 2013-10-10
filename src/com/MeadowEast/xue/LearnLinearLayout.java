@@ -23,7 +23,7 @@ public class LearnLinearLayout extends LinearLayout {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent event) {
-		if (Math.abs(xDelta - event.getX()) < 50) {
+		if (Math.abs(xDelta - event.getX()) < 40) {
 			return false;
 		}
 		if (event.getAction() == MotionEvent.ACTION_MOVE
