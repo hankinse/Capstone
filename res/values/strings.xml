@@ -42,14 +42,14 @@
     <string name="action_settings">Settings</string>
     <string name="stat_header_text">User Statistics</string>
     <string name="last_deck_date_text_title">Last Deck Completed:</string>
-    <string name="level_counts_title">Level Counts:</string>
+    <string name="level_counts_title">Level Counts:*</string>
     <string name="weekly_progress_title">Weekly Progress:</string>
     <string name="menu_stats">Statistics</string>
     <string name="invalid_log">You have not completed a deck yet.</string>
-    <string name="no_progress">You have not made progress this week.</string>
+    <string name="no_progress">No progress this week.</string>
     <string name="na">N/A</string>
     <string name="english_chinese_statistics_text">English - Chinese Statistics</string>
     <string name="chinese_english_statistics_text">Chinese - English Statistics</string>
-    <string name="level_hint">The level represents your familiarity with a card.  A level 0 card is a never-before-seen card, while a level 4 card is a card you are most familiar with.  Get cards correct as they first appear in a deck in order to increase your level of familarity.  If your familiarity with a card reaches level 2, then it is considered learned. </string>
+    <string name="level_hint">*The level represents your familiarity with a card.  A level 0 card is a never-before-seen card, while a level 4 card is a learning item that you tend to mark as correct.  If your familiarity with a card reaches level 2, then it is considered learned. </string>
 
 </resources>
